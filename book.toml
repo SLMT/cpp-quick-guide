@@ -3,4 +3,4 @@ authors = ["SLMT (Yu-Shan Lin)"]
 language = "zh-TW"
 multilingual = false
 src = "src"
-title = "C++ 快速上手手冊"
+title = "小山的 C++ 快速上手筆記"
