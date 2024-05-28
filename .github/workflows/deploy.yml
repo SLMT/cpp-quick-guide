@@ -1,10 +1,10 @@
-name: Build and Deploy
+name: Deploy
 on:
   push:
     branches:
       - master
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
