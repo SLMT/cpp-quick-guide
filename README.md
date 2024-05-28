@@ -4,5 +4,5 @@
 
 本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提上快速上手所做的筆記。
 
-本書網址： https://www.slmt.tw/cpp-quick-start/
-本書 Repository： https://github.com/SLMT/cpp-quick-start
+- 本書網址： https://www.slmt.tw/cpp-quick-start/
+- 本書 Repository： https://github.com/SLMT/cpp-quick-start
