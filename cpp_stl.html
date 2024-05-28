@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Page not found - 小山的 C++ 快速上手筆記</title>
-        <base href="/">
+        <title>C++ STL - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html" class="active"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,14 +173,192 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="c-stl"><a class="header" href="#c-stl">C++ STL</a></h1>
+<p>Standard Template Library (STL) 是 C++ 之中最重要的函式庫，包含多項重要的元件：</p>
+<ul>
+<li>Containers： 各種儲存與操作資料的容器</li>
+<li>Algorithms： 各種高效的演算法</li>
+<li>Iterators： 用來依照某些邏輯存取容器內資料的存取器</li>
+<li>Function Objects： 提供將 function 做為參數傳入 function 的方法，可以幫助客製化演算法的行為</li>
+<li>Adapters： 可以用來修改 STL 內其他元件行為的工具</li>
+</ul>
+<h2 id="algorithms"><a class="header" href="#algorithms">Algorithms</a></h2>
+<p>常用 algorithms：</p>
+<ul>
+<li>
+<p><code>sort(begin, end)</code> ： 使用 IntroSort 進行排序</p>
+<ul>
+<li>
+<p>IntroSort：預設使用 Quick Sort。如果發現 partition 差太多，改成用 Heap Sort。如果 Size 夠小，改成用 Insertion Sort。</p>
+</li>
+<li>
+<p>基本用法：</p>
+<pre><code class="language-cpp">int arr[] = {3, 5, 1, 2, 4};
+sort(arr, arr + 5);
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>binary_search(begin, end, value)</code> ： 使用 binary search</p>
+</li>
+<li>
+<p><code>reverse(begin, end)</code> ： 反轉</p>
+</li>
+</ul>
+<h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
+<p>特殊 containers：</p>
+<ul>
+<li>
+<p><code>forward_list</code> ： 只有向前指針的 linked list，比 <code>list</code> 使用更少的空間</p>
+</li>
+<li>
+<p><code>priority_queue</code> ：  用 heap 實作的 queue，最大的東西會在最前面</p>
+<ul>
+<li>
+<p>一般用法：</p>
+<pre><code class="language-cpp">int arr[6] = { 10, 2, 4, 8, 6, 9 };
+priority_queue&lt;int&gt; pq;
+ 
+// pushing array sequentially one by one
+for (int i = 0; i &lt; 6; i++) {
+    pq.push(arr[i]);
+}
+ 
+// printing priority queue
+cout &lt;&lt; "Priority Queue: ";
+while (!pq.empty()) {
+    cout &lt;&lt; pq.top() &lt;&lt; ' ';
+    pq.pop();
+}
+</code></pre>
+</li>
+<li>
+<p>修改成最小在最前面：</p>
+<pre><code class="language-cpp">int arr[6] = { 10, 2, 4, 8, 6, 9 };
+priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; gquiz(arr, arr + 6);
+</code></pre>
+</li>
+<li>
+<p>使用自製的 comparator：</p>
+<pre><code class="language-cpp">class Foo { /* data */ };
+
+class Compare
+{
+public:
+    bool operator() (Foo, Foo)
+    {
+		    // Is it smaller ?
+        return true;
+    }
+};
+
+int main()
+{
+    std::priority_queue&lt;Foo, std::vector&lt;Foo&gt;, Compare&gt; pq;
+    return 0;
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>set</code> ： sorted 的 set，用紅黑樹實作</p>
+</li>
+<li>
+<p><code>map</code> ： sorted 的 map，實作與 <code>set</code> 相同</p>
+</li>
+<li>
+<p><code>multiset</code> ： 跟 <code>set</code> 一樣是 sorted set，但可以存重複資料</p>
+</li>
+<li>
+<p><code>multimap</code> ： 跟 <code>map</code> 一樣是 sorted map，但可以存重複的 key</p>
+<ul>
+<li>注意用 <code>find(key)</code> 只會拿到一個 key-value pair，如果想要抓出所有重複 key 的 pair，要使用 <code>equal_range(key)</code>
+<ul>
+<li><code>equal_range(key)</code> 回傳的是一個 pair， <code>first</code> 是 iterator 的開頭（lower bound）， <code>second</code> 是 iterator 的結尾 (upper bound, exclusive)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="functors"><a class="header" href="#functors">Functors</a></h2>
+<p>直接看一例子，這個例子是寫一個 class 幫所有 array 所有的 element 加上想要的數字：</p>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+// A Functor
+class increment
+{
+private:
+	int num;
+public:
+	increment(int n) : num(n) { }
+
+	// This operator overloading enables calling
+	// operator function () on objects of increment
+	int operator () (int arr_num) const {
+		return num + arr_num;
+	}
+};
+
+// Driver code
+int main()
+{
+	int arr[] = {1, 2, 3, 4, 5};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	int to_add = 5;
+
+	transform(arr, arr+n, arr, increment(to_add));
+
+	for (int i=0; i&lt;n; i++)
+		cout &lt;&lt; arr[i] &lt;&lt; " ";
+}
+</code></pre>
+<p>主要是提供了 overload <code>()</code> 的能力，所以讓一個 object 可以被像 function 一樣呼叫。</p>
+<h2 id="iterator"><a class="header" href="#iterator">Iterator</a></h2>
+<p>可以看 C++ Reference 官網的介紹，簡單明瞭：https://cplusplus.com/reference/iterator/</p>
+<h2 id="pairs"><a class="header" href="#pairs">Pairs</a></h2>
+<p>C++ STL 提供了 pair 可以使用：</p>
+<pre><code class="language-cpp">// CPP program to illustrate Pair in STL
+#include &lt;iostream&gt;
+#include &lt;utility&gt;
+
+using namespace std;
+
+// Driver Code
+int main()
+{
+	// defining a pair
+	pair&lt;int, char&gt; PAIR1;
+
+	// first part of the pair
+	PAIR1.first = 100;
+	// second part of the pair
+	PAIR1.second = 'G';
+
+	cout &lt;&lt; PAIR1.first &lt;&lt; " ";
+	cout &lt;&lt; PAIR1.second &lt;&lt; endl;
+
+	return 0;
+}
+
+</code></pre>
+<ul>
+<li>Pair 可以比較，會先比第一個再比第二個</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="cpp_basics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
+                            <a rel="next prefetch" href="cpp_oop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -189,7 +366,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="cpp_basics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
+                    <a rel="next prefetch" href="cpp_oop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

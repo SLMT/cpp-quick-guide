@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -178,9 +178,1279 @@
 <p><a href="https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml"><img src="https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml/badge.svg" alt="Deploy" /></a></p>
 <p>本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提上快速上手所做的筆記。</p>
 <ul>
-<li>本書網址： https://www.slmt.tw/cpp-quick-start/</li>
-<li>本書 Repository： https://github.com/SLMT/cpp-quick-start</li>
+<li>本書網址： <a href="https://www.slmt.tw/cpp-quick-start/">https://www.slmt.tw/cpp-quick-start/</a></li>
+<li>本書 Repository： <a href="https://github.com/SLMT/cpp-quick-start">https://github.com/SLMT/cpp-quick-start</a></li>
 </ul>
+<h2 id="內容哪裡來的"><a class="header" href="#內容哪裡來的">內容哪裡來的？</a></h2>
+<p>這本筆記的內容主要是我從以下網站中整理出來的重點回顧：</p>
+<ul>
+<li>TutorialsPoint C++： <a href="https://www.tutorialspoint.com/cplusplus/index.htm">https://www.tutorialspoint.com/cplusplus/index.htm</a></li>
+<li>Microsoft Learn - C++ 文件： <a href="https://learn.microsoft.com/zh-tw/cpp/cpp/?view=msvc-170">https://learn.microsoft.com/zh-tw/cpp/cpp/?view=msvc-170</a></li>
+<li>GeeksforGeeks - The C++ Standard Template Library (STL)： <a href="https://www.geeksforgeeks.org/the-c-standard-template-library-stl/">https://www.geeksforgeeks.org/the-c-standard-template-library-stl/</a></li>
+<li>现代 C++ 教程：高速上手 C++ 11/14/17/20： <a href="https://changkun.de/modern-cpp/">https://changkun.de/modern-cpp/</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-basics"><a class="header" href="#c-basics">C++ Basics</a></h1>
+<h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
+<ul>
+<li><code>bool</code> : boolean</li>
+<li><code>wchar_t</code> : wide characters (16 bits)</li>
+<li>固定長度型別
+<ul>
+<li><code>int64_t</code> : 64-bit 整數</li>
+<li>https://en.cppreference.com/w/cpp/types/integer</li>
+</ul>
+</li>
+</ul>
+<h2 id="檢查-max--min"><a class="header" href="#檢查-max--min">檢查 Max &amp; Min</a></h2>
+<ul>
+<li>Method 1: 內建常數
+<ul>
+<li><code>INT32_MAX</code> 等等</li>
+</ul>
+</li>
+<li>Method 2:  <code>std::numeric_limits&lt;T&gt;::min()</code>
+<ul>
+<li><code>T</code> 可以換成任意內建型別</li>
+</ul>
+</li>
+</ul>
+<h2 id="宣告變數"><a class="header" href="#宣告變數">宣告變數</a></h2>
+<ul>
+<li>Storage Class
+<ul>
+<li><code>auto</code> : 跟代表自動推導的 <code>auto</code> 不同，代表變數存放的位置是自動決定</li>
+<li><code>register</code> : 要求存在 register (C++11 之後 deprecated)</li>
+<li><code>static</code> :
+<ul>
+<li>用在 local variable 會讓這個 local variable 的值與記憶體空間一直保留到程式結束</li>
+<li>用在 global variable 會限制該 variable 的 scope 在所在的 file 中</li>
+<li>用在 class member 會讓該 member shared 在所有 object 中</li>
+</ul>
+</li>
+<li><code>extern</code> : 代表變數定義在其他檔案內，linking 時才會引入
+<ul>
+<li>Example: <code>extern int num</code></li>
+<li>https://learn.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170</li>
+</ul>
+</li>
+<li><code>mutable</code> : (TODO)</li>
+</ul>
+</li>
+<li>全域變數宣告時會自動初始化為 NULL/0</li>
+</ul>
+<h2 id="type-qualifiers"><a class="header" href="#type-qualifiers"><strong>Type Qualifiers</strong></a></h2>
+<ul>
+<li><code>const</code> : 常數</li>
+<li><code>volatile</code> : 主要作用，防止存取此變數的動作因為 optimization 被調換位置
+<ul>
+<li>通常也會要求 CPU 不能快取此變數</li>
+</ul>
+</li>
+<li><code>restrict</code> : 限制只有此指標變數可以指向該記憶體位置
+<ul>
+<li>屬於 C99 標準，非 C++ 標準</li>
+<li>https://wucodingroad.blogspot.com/2017/05/Cplusplus-restrict.html</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference"><a class="header" href="#reference">Reference</a></h2>
+<p>Reference 是 C++ 引入給變數設定「別名」的功能，跟 pointer 差異如下：</p>
+<ul>
+<li>Null 值：Pointer 允許 NULL，Reference 不行</li>
+<li>修改指向位置：Pointer 的變數可以途中修改成指向其他記憶體位置，Reference 不行</li>
+<li>初始化：Reference 初始化時一定要設定指向的變數，Pointer 沒有限制</li>
+</ul>
+<p>宣告方式：</p>
+<pre><code class="language-cpp">// declare simple variables
+int    i;
+double d;
+
+// declare reference variables
+int&amp;    r = i;
+double&amp; s = d;
+</code></pre>
+<p>Reference 可以從 function 被 return：</p>
+<pre><code class="language-cpp">double&amp; setValues( int i ) {
+   return vals[i];   // return a reference to the ith element
+}
+</code></pre>
+<p>但要注意不能 return local variable 的 reference</p>
+<h2 id="arrays"><a class="header" href="#arrays">Arrays</a></h2>
+<ul>
+<li>
+<p>宣告方式： <code>double a[10];</code></p>
+</li>
+<li>
+<p>多維陣列： <code>int threedim[5][10][4];</code></p>
+</li>
+<li>
+<p>初始化： <code>double balance[] = {1000.0, 2.0, 3.4, 17.0, 50.0};</code></p>
+</li>
+<li>
+<p>初始化二維陣列：</p>
+<pre><code class="language-cpp">int a[3][4] = {
+   {0, 1, 2, 3} ,   /*  initializers for row indexed by 0 */
+   {4, 5, 6, 7} ,   /*  initializers for row indexed by 1 */
+   {8, 9, 10, 11}   /*  initializers for row indexed by 2 */
+};
+</code></pre>
+</li>
+<li>
+<p>Array 的變數其實就是 pointer：</p>
+<pre><code class="language-cpp">double *p;
+double balance[10];
+
+p = balance;
+</code></pre>
+<ul>
+<li><code>balance[4]</code> 等價於 <code>*(balance + 4)</code></li>
+</ul>
+</li>
+<li>
+<p>Array 作為 paramater 傳進 function 方法有兩種常見方式：</p>
+<ul>
+<li>
+<p>Method 1: 用 pointer</p>
+<pre><code class="language-cpp">void myFunction(int *param) {
+   // ...
+}
+</code></pre>
+</li>
+<li>
+<p>Method 2: 用 unsized array</p>
+<pre><code class="language-cpp">void myFunction(int param[]) {
+   // ...
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>從 function return array 只有一種做法，就是回傳 pointer：</p>
+<pre><code class="language-cpp">int * myFunction() {
+   // ...
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="c-string"><a class="header" href="#c-string">C++ String</a></h2>
+<p>C++ 有內建 String 型別，所以可以不使用 C-style string (也就是字元陣列)</p>
+<p>使用方式：</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+using std::string;
+
+string s = "aabbcc";
+s.size(); // return 6
+s.find("bb"); // return 2
+s += "123"; // s = aabbcc123
+</code></pre>
+<p>字面值直接使用 string 型別（省掉一個轉換步驟）：</p>
+<pre><code class="language-cpp">using namespace std::literals;
+string s3_2 = "hello world"s;
+</code></pre>
+<p>基本操作：</p>
+<pre><code class="language-cpp">os &lt;&lt; s // 輸出 s 
+is &gt;&gt; s // 輸入 s
+s.empty() // 檢查 s 是否為空
+s.size() // s 目前長度
+s[n] // 直接取得 s 的第 n 個元素
+s.at(n) // 同樣取得第 n 個元素，但會檢查邊界
+s1 + s2 // 把 s1 加 s2 取得新的字串
+s1.append(s2) // 把 s2 加到 s1 後面，不會產生新字串
+s1 += s2 // 等價於 s1.append(s2)
+s1 = s2 //　拷貝複製 s2
+s1 != s2 // 比較 s1 和 s2 是否相同
+&lt;, &lt;=, ==, &gt;=, &gt; // 做大小比較，以字典排序
+</code></pre>
+<p>完整 C++ String 教學：https://tigercosmos.xyz/post/2023/06/c++/std-string-beginner/</p>
+<h2 id="standard-inputoutput"><a class="header" href="#standard-inputoutput">Standard Input/Output</a></h2>
+<p>C++ 有以下幾個常用的 input/output streams</p>
+<ul>
+<li><code>cin</code> : 標準輸入</li>
+<li><code>cout</code> : 標準輸出</li>
+<li><code>cerr</code> : 標準錯誤（但沒有 buffer）</li>
+<li><code>clog</code> : 標準錯誤（但有 buffer）</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-stl"><a class="header" href="#c-stl">C++ STL</a></h1>
+<p>Standard Template Library (STL) 是 C++ 之中最重要的函式庫，包含多項重要的元件：</p>
+<ul>
+<li>Containers： 各種儲存與操作資料的容器</li>
+<li>Algorithms： 各種高效的演算法</li>
+<li>Iterators： 用來依照某些邏輯存取容器內資料的存取器</li>
+<li>Function Objects： 提供將 function 做為參數傳入 function 的方法，可以幫助客製化演算法的行為</li>
+<li>Adapters： 可以用來修改 STL 內其他元件行為的工具</li>
+</ul>
+<h2 id="algorithms"><a class="header" href="#algorithms">Algorithms</a></h2>
+<p>常用 algorithms：</p>
+<ul>
+<li>
+<p><code>sort(begin, end)</code> ： 使用 IntroSort 進行排序</p>
+<ul>
+<li>
+<p>IntroSort：預設使用 Quick Sort。如果發現 partition 差太多，改成用 Heap Sort。如果 Size 夠小，改成用 Insertion Sort。</p>
+</li>
+<li>
+<p>基本用法：</p>
+<pre><code class="language-cpp">int arr[] = {3, 5, 1, 2, 4};
+sort(arr, arr + 5);
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>binary_search(begin, end, value)</code> ： 使用 binary search</p>
+</li>
+<li>
+<p><code>reverse(begin, end)</code> ： 反轉</p>
+</li>
+</ul>
+<h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
+<p>特殊 containers：</p>
+<ul>
+<li>
+<p><code>forward_list</code> ： 只有向前指針的 linked list，比 <code>list</code> 使用更少的空間</p>
+</li>
+<li>
+<p><code>priority_queue</code> ：  用 heap 實作的 queue，最大的東西會在最前面</p>
+<ul>
+<li>
+<p>一般用法：</p>
+<pre><code class="language-cpp">int arr[6] = { 10, 2, 4, 8, 6, 9 };
+priority_queue&lt;int&gt; pq;
+ 
+// pushing array sequentially one by one
+for (int i = 0; i &lt; 6; i++) {
+    pq.push(arr[i]);
+}
+ 
+// printing priority queue
+cout &lt;&lt; "Priority Queue: ";
+while (!pq.empty()) {
+    cout &lt;&lt; pq.top() &lt;&lt; ' ';
+    pq.pop();
+}
+</code></pre>
+</li>
+<li>
+<p>修改成最小在最前面：</p>
+<pre><code class="language-cpp">int arr[6] = { 10, 2, 4, 8, 6, 9 };
+priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; gquiz(arr, arr + 6);
+</code></pre>
+</li>
+<li>
+<p>使用自製的 comparator：</p>
+<pre><code class="language-cpp">class Foo { /* data */ };
+
+class Compare
+{
+public:
+    bool operator() (Foo, Foo)
+    {
+		    // Is it smaller ?
+        return true;
+    }
+};
+
+int main()
+{
+    std::priority_queue&lt;Foo, std::vector&lt;Foo&gt;, Compare&gt; pq;
+    return 0;
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>set</code> ： sorted 的 set，用紅黑樹實作</p>
+</li>
+<li>
+<p><code>map</code> ： sorted 的 map，實作與 <code>set</code> 相同</p>
+</li>
+<li>
+<p><code>multiset</code> ： 跟 <code>set</code> 一樣是 sorted set，但可以存重複資料</p>
+</li>
+<li>
+<p><code>multimap</code> ： 跟 <code>map</code> 一樣是 sorted map，但可以存重複的 key</p>
+<ul>
+<li>注意用 <code>find(key)</code> 只會拿到一個 key-value pair，如果想要抓出所有重複 key 的 pair，要使用 <code>equal_range(key)</code>
+<ul>
+<li><code>equal_range(key)</code> 回傳的是一個 pair， <code>first</code> 是 iterator 的開頭（lower bound）， <code>second</code> 是 iterator 的結尾 (upper bound, exclusive)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="functors"><a class="header" href="#functors">Functors</a></h2>
+<p>直接看一例子，這個例子是寫一個 class 幫所有 array 所有的 element 加上想要的數字：</p>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+// A Functor
+class increment
+{
+private:
+	int num;
+public:
+	increment(int n) : num(n) { }
+
+	// This operator overloading enables calling
+	// operator function () on objects of increment
+	int operator () (int arr_num) const {
+		return num + arr_num;
+	}
+};
+
+// Driver code
+int main()
+{
+	int arr[] = {1, 2, 3, 4, 5};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	int to_add = 5;
+
+	transform(arr, arr+n, arr, increment(to_add));
+
+	for (int i=0; i&lt;n; i++)
+		cout &lt;&lt; arr[i] &lt;&lt; " ";
+}
+</code></pre>
+<p>主要是提供了 overload <code>()</code> 的能力，所以讓一個 object 可以被像 function 一樣呼叫。</p>
+<h2 id="iterator"><a class="header" href="#iterator">Iterator</a></h2>
+<p>可以看 C++ Reference 官網的介紹，簡單明瞭：https://cplusplus.com/reference/iterator/</p>
+<h2 id="pairs"><a class="header" href="#pairs">Pairs</a></h2>
+<p>C++ STL 提供了 pair 可以使用：</p>
+<pre><code class="language-cpp">// CPP program to illustrate Pair in STL
+#include &lt;iostream&gt;
+#include &lt;utility&gt;
+
+using namespace std;
+
+// Driver Code
+int main()
+{
+	// defining a pair
+	pair&lt;int, char&gt; PAIR1;
+
+	// first part of the pair
+	PAIR1.first = 100;
+	// second part of the pair
+	PAIR1.second = 'G';
+
+	cout &lt;&lt; PAIR1.first &lt;&lt; " ";
+	cout &lt;&lt; PAIR1.second &lt;&lt; endl;
+
+	return 0;
+}
+
+</code></pre>
+<ul>
+<li>Pair 可以比較，會先比第一個再比第二個</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-oop"><a class="header" href="#c-oop">C++ OOP</a></h1>
+<h2 id="class-definition"><a class="header" href="#class-definition">Class Definition</a></h2>
+<p>基本例子：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+ 
+using namespace std;
+ 
+class Box {
+   public:
+      double length;
+      void setWidth( double wid );
+      double getWidth( void );
+ 
+   private:
+      double width;
+};
+ 
+// Member functions definitions
+double Box::getWidth(void) {
+   return width ;
+}
+ 
+void Box::setWidth( double wid ) {
+   width = wid;
+}
+ 
+// Main function for the program
+int main() {
+   Box box;
+ 
+   // set box length without member function
+   box.length = 10.0; // OK: because length is public
+   cout &lt;&lt; "Length of box : " &lt;&lt; box.length &lt;&lt;endl;
+ 
+   // set box width without member function
+   // box.width = 10.0; // Error: because width is private
+   box.setWidth(10.0);  // Use member function to set it.
+   cout &lt;&lt; "Width of box : " &lt;&lt; box.getWidth() &lt;&lt;endl;
+ 
+   return 0;
+}
+</code></pre>
+<h2 id="initialization-list"><a class="header" href="#initialization-list">Initialization List</a></h2>
+<p>在 constructor 上可以加上特殊的 list 初始化 properties，如下：</p>
+<pre><code class="language-cpp">C::C( double a, double b, double c): X(a), Y(b), Z(c) {
+   ....
+}
+</code></pre>
+<h2 id="copy-constructor"><a class="header" href="#copy-constructor">Copy Constructor</a></h2>
+<p>C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製資料的能力，形式如下：</p>
+<pre><code class="language-cpp">classname (const classname &amp;obj) {
+   // body of constructor
+}
+</code></pre>
+<p>如果沒有的話 C++ 會自動創建一個預設的，做法是會呼叫所有 member variable 的 copy constructor 實現 deep copy。</p>
+<h2 id="friend-functions--classes"><a class="header" href="#friend-functions--classes">Friend Functions &amp; Classes</a></h2>
+<p>Class 內可以定義 friend function 與 class 如下：</p>
+<pre><code class="language-java">class Box {
+   double width;
+   
+   public:
+      double length;
+      friend void printWidth( Box box );
+      void setWidth( double wid );
+			friend class ClassTwo;
+};
+</code></pre>
+<p>這樣寫代表外面的 <code>printWidth</code> 與 <code>ClassTwo</code> 就可以直接存取 Box 的變數 <code>width</code></p>
+<h2 id="static-members"><a class="header" href="#static-members">Static Members</a></h2>
+<p>C++ 的 class 可以定義 static member，但變數的初始化必須要寫在 class definition 外面：</p>
+<pre><code class="language-java">// foo.h
+class foo
+{
+    private:
+        static int i;
+};
+
+// foo.cpp
+int foo::i = 0;
+</code></pre>
+<p>其他特性基本跟 Java 的 static 相同。</p>
+<h2 id="繼承性"><a class="header" href="#繼承性">繼承性</a></h2>
+<p>與 Java 的關鍵差異：</p>
+<ul>
+<li>可以繼承多個 class
+<ul>
+<li>類似 Rust 的 trait implementation</li>
+</ul>
+</li>
+<li>繼承時可以設定 access modifier
+<ul>
+<li>
+<p>例如下面的例子將 base class 設定為 public</p>
+<pre><code class="language-java">// Base class
+class Shape {
+   // ...
+};
+
+// Derived class
+class Rectangle: public Shape {
+   // ...
+};
+</code></pre>
+</li>
+<li>
+<p>這個用途是可以修改原本 base class 內的 member 存取性質，但只能改得更嚴格，不能放得更鬆</p>
+<ul>
+<li>設定為 public ⇒ 不修改 base class 的 member</li>
+<li>設定為 protected ⇒ 原本是 public 的 member 都會變成 protected</li>
+<li>設定為 private ⇒ 原本是 public 與 protected 的 member 會變成 private</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="operators-overloading"><a class="header" href="#operators-overloading"><strong>Operators Overloading</strong></a></h2>
+<p>C++ 的一大特色就是可以修改 operator 對 class 造成的效果 (Rust 也有)</p>
+<p>假設有一個 <code>Box</code> class，修改 <code>+</code> 的效果方式如下：</p>
+<pre><code class="language-java">class Box {
+   public:
+      // ...
+      
+      // Overload + operator to add two Box objects.
+      Box operator+(const Box&amp; b) {
+         Box box;
+         box.length = this-&gt;length + b.length;
+         box.breadth = this-&gt;breadth + b.breadth;
+         box.height = this-&gt;height + b.height;
+         return box;
+   // ...
+}
+</code></pre>
+<h2 id="function-override--virtual-functions"><a class="header" href="#function-override--virtual-functions">Function Override &amp; Virtual Functions</a></h2>
+<p>在 C++ 中，如果衍伸類別要改寫基底類別的 method，基底類別就必須要將 method 定義為 virtual：</p>
+<pre><code class="language-java">class Shape {
+   protected:
+      int width, height;
+
+   public:
+      Shape( int a = 0, int b = 0){
+         width = a;
+         height = b;
+      }
+      virtual int area() {
+         cout &lt;&lt; "Parent class area :" &lt;&lt; width * height &lt;&lt; endl;
+         return width * height;
+      }
+};
+class Triangle: public Shape {
+   public:
+      Triangle( int a = 0, int b = 0):Shape(a, b) { }
+
+      int area () {
+         cout &lt;&lt; "Triangle class area :" &lt;&lt; (width * height)/2 &lt;&lt; endl;
+         return (width * height / 2);
+      }
+};
+</code></pre>
+<p>這是因為 C++ 在 class 建立時，預設會用 static linkage 綁定 function 的定義，而這個會導致當一個 function 被呼叫時，「只會根據其 variable type 來判斷該呼叫哪一個 function」。也就是說，無論實際上物件是 <code>Shape</code> 還是 <code>Triangle</code> ，只要他是 <code>Shape</code> 的變數，就會呼叫到 <code>Shape</code> 的 <code>area()</code> 。</p>
+<p>如果將 function 設定為 virtual，C++ 就會知道該將 function 改用 dynamic linkage 處理，他會根據當下 object 的實際類別來判斷該呼叫哪一個 function (使用 vtable)。</p>
+<p>簡單的比較例子：</p>
+<pre><code class="language-java">class Base
+{
+  public:
+            void Method1 ()  {  std::cout &lt;&lt; "Base::Method1" &lt;&lt; std::endl;  }
+    virtual void Method2 ()  {  std::cout &lt;&lt; "Base::Method2" &lt;&lt; std::endl;  }
+};
+
+class Derived : public Base
+{
+  public:
+    void Method1 ()          {  std::cout &lt;&lt; "Derived::Method1" &lt;&lt; std::endl;  }
+    void Method2 () override {  std::cout &lt;&lt; "Derived::Method2" &lt;&lt; std::endl;  }
+    // Note - override is optional; adding it to Method1 would result in an error
+};
+
+Base* basePtr = new Derived ();
+// Note - constructed as Derived, but pointer stored as Base*
+
+basePtr-&gt;Method1 ();  //  Prints "Base::Method1"
+basePtr-&gt;Method2 ();  //  Prints "Derived::Method2"
+</code></pre>
+<p>來源：https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c</p>
+<h2 id="abstract-methods--abstract-class"><a class="header" href="#abstract-methods--abstract-class">Abstract Methods &amp; Abstract Class</a></h2>
+<p>C++ 並沒有 <code>abstract</code> 關鍵字，但是可以用別的方式做到相同效果。</p>
+<p>只要單純宣告但不定義 virtual function，並且加上 <code>= 0</code> ，就稱之為 pure virtual function：</p>
+<pre><code class="language-java">virtual int area() = 0;
+</code></pre>
+<p>這等同於 Java 的 abstract method。</p>
+<p>只要 class 中包含至少一個 pure virtual function，那麼該 class 就不能被實體化，因此效果等同於 abstract class。</p>
+<h2 id="class-vs-struct"><a class="header" href="#class-vs-struct">Class vs. Struct</a></h2>
+<p>C++ 的 class 與 struct 其實沒有太大的差別，只是在以下幾點：</p>
+<ul>
+<li>Class 的 member 預設是 private，struct 是 public
+<ul>
+<li>繼承的時候也類似，class 預設會是 private 繼承</li>
+</ul>
+</li>
+<li>Class 可以當作 template 的關鍵字用，struct 不行</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-advanced"><a class="header" href="#c-advanced">C++ Advanced</a></h1>
+<h2 id="try-catch"><a class="header" href="#try-catch">Try-Catch</a></h2>
+<p>C++ 也可以 throw exception，並且用 try-catch 抓住。與 Java 最大的不同在於 C++ 的 throw 可以丟出任何種類的資料，catch 只要寫清楚資料的型別就好：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+double division(int a, int b) {
+   if( b == 0 ) {
+      throw "Division by zero condition!";
+   }
+   return (a/b);
+}
+
+int main () {
+   int x = 50;
+   int y = 0;
+   double z = 0;
+ 
+   try {
+      z = division(x, y);
+      cout &lt;&lt; z &lt;&lt; endl;
+   } catch (const char* msg) {
+     cerr &lt;&lt; msg &lt;&lt; endl;
+   }
+
+   return 0;
+}
+</code></pre>
+<p>C++ STD 有內建一系列的 Exception，可以在下面網頁看到清單：</p>
+<p>https://cplusplus.com/reference/exception/exception/?kw=exception</p>
+<p>同時開發者也鼓勵繼承 <code>exception</code> 來製造自己的錯誤，其中只需要 override <code>what()</code> (顯示錯誤資訊的 function) 就好。</p>
+<h2 id="template"><a class="header" href="#template">Template</a></h2>
+<p>template 就是 Jave 的 generic，只是語法稍微不同，功能也沒那麼強而已。</p>
+<p>定義 function 的 template 範例如下：</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T minimum(const T&amp; lhs, const T&amp; rhs)
+{
+    return lhs &lt; rhs ? lhs : rhs;
+}
+</code></pre>
+<p>定義 class 的 template 範例如下：</p>
+<pre><code class="language-cpp">template &lt;class T&gt;
+class Stack { 
+   private: 
+      vector&lt;T&gt; elems;    // elements 
+
+   public: 
+      void push(T const&amp;);  // push element 
+      void pop();               // pop element 
+      T top() const;            // return top element 
+      
+      bool empty() const {      // return true if empty.
+         return elems.empty(); 
+      } 
+}; 
+
+template &lt;class T&gt;
+void Stack&lt;T&gt;::push (T const&amp; elem) { 
+   // append copy of passed element 
+   elems.push_back(elem);    
+} 
+</code></pre>
+<p>注意在外面定義 class method 時也要額外的 <code>template &lt;class T&gt;</code> 標籤。</p>
+<p>MSFT 官網有更加詳盡的介紹：https://learn.microsoft.com/zh-tw/cpp/cpp/templates-cpp?view=msvc-170</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="modern-c-after-c11"><a class="header" href="#modern-c-after-c11">Modern C++ (After C++11)</a></h1>
+<h2 id="棄用語法"><a class="header" href="#棄用語法">棄用語法</a></h2>
+<ul>
+<li>字串 litertral 應該改用 <code>const char *</code> 而不是 <code>char *</code> 宣告</li>
+<li><code>register</code> 效用被移除</li>
+<li><code>bool</code> 不可以 <code>++</code></li>
+<li>C 語言風格的轉換方式 <code>(type)</code> 被棄用，應該改用 <code>static_cast</code>、<code>reinterpret_cast</code>、<code>const_cast</code> 等方式轉換</li>
+</ul>
+<h2 id="新增語法"><a class="header" href="#新增語法">新增語法</a></h2>
+<p>C++11：</p>
+<ul>
+<li>
+<p>指定 Null Pointer 時改用 <code>nullptr</code> 而不是 <code>NULL</code></p>
+<ul>
+<li><code>NULL</code> 可能會被解析成 int 造成額外問題，<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#nullptr">例子</a></li>
+</ul>
+</li>
+<li>
+<p>加入 <code>constexpr</code> 支援，用來表示某一個 expression 或 function 輸出的結果是一個常數</p>
+<ul>
+<li>
+<p>編譯器會去驗證這點，並且可以以此來優化程式碼</p>
+</li>
+<li>
+<p>範例：</p>
+<pre><code class="language-cpp">constexpr int fibonacci(const int n) {
+    return n == 1 || n == 2 ? 1 : fibonacci(n-1)+fibonacci(n-2);
+}
+</code></pre>
+<pre><code class="language-cpp">constexpr int var_constexpr = 1 + 2 + 3;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>提供可以使用 initialization list 初始化任意物件的能力（但需要實作對應的 constructor），<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8">範例</a></p>
+</li>
+<li>
+<p><code>auto</code> ：自動型別推導</p>
+<pre><code class="language-cpp">auto i = 5;              // i 被推导为 int
+auto arr = new auto(10); // arr 被推导为 int *
+</code></pre>
+<ul>
+<li>
+<p><code>auto</code> 也常用於 template 指定 function return type 時，這樣就不需要額外定義另一個 type 變數：</p>
+<pre><code class="language-cpp">// Old way
+template&lt;typename R, typename T, typename U&gt;
+R add(T x, U y) {
+    return x + y;
+}
+
+// After C++11
+template&lt;typename T, typename U&gt;
+auto add(T x, U y){
+    return x + y;
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>decltype</code> ： 輸出變數是何種型別</p>
+<ul>
+<li>
+<p>通常搭配 <code>std::is_same&lt;T, U&gt;</code> 使用，檢查是否兩個型別是同一個型別</p>
+<pre><code class="language-cpp">auto x = 1;
+if (std::is_same&lt;decltype(x), int&gt;::value)
+    std::cout &lt;&lt; "type x == int" &lt;&lt; std::endl;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Ranged for loop</p>
+<pre><code class="language-cpp">std::vector&lt;int&gt; vec = {1, 2, 3, 4};
+for (auto element : vec)
+    std::cout &lt;&lt; element &lt;&lt; std::endl; // read only
+for (auto &amp;element : vec) {
+    element += 1;                      // writeable
+}
+</code></pre>
+<ul>
+<li>宣告 ranged for loop 的原則：
+<ul>
+<li>Choose <code>auto x</code> when you want to work with copies.</li>
+<li>Choose <code>auto &amp;x</code> when you want to work with original items and may modify them.</li>
+<li>Choose <code>auto const &amp;x</code> when you want to work with original items and will not modify them.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>template 別名：</p>
+<pre><code class="language-cpp">template&lt;typename T, typename U&gt;
+class MagicType {
+public:
+    T dark;
+    U magic;
+};
+
+template&lt;typename T&gt;
+using TrueDarkMagic = MagicType&lt;std::vector&lt;T&gt;, std::string&gt;;
+
+int main() {
+    TrueDarkMagic&lt;bool&gt; you;
+}
+</code></pre>
+</li>
+<li>
+<p>Template 變動變數清單：</p>
+<pre><code class="language-cpp">template&lt;typename... Ts&gt;
+void magic(Ts... args) {
+    std::cout &lt;&lt; sizeof...(args) &lt;&lt; std::endl;
+}
+
+magic(); // Print: 0
+magic(1); // Print: 1
+magic(1, ""); // Print: 2
+</code></pre>
+<ul>
+<li>關於如何處理請見<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E6%A8%A1%E6%9D%BF">範例</a></li>
+</ul>
+</li>
+<li>
+<p>Delegate constructor：允許重複使用同一個 class 內的 constructor</p>
+<pre><code class="language-cpp">class Base {
+public:
+    int value1;
+    int value2;
+    Base() {
+        value1 = 1;
+    }
+    Base(int value) : Base() { // delegate Base() constructor
+        value2 = value;
+    }
+};
+</code></pre>
+</li>
+<li>
+<p>繼承 constructor：使用 <code>using</code> 關鍵字來使用 base class 的 constructor</p>
+<pre><code class="language-cpp">class Subclass : public Base {
+public:
+    using Base::Base; // inheritance constructor
+};
+</code></pre>
+</li>
+<li>
+<p><code>override</code> : 避免複寫不存在的 virtual function</p>
+<pre><code class="language-cpp">struct Base {
+    virtual void foo(int);
+};
+struct SubClass: Base {
+    virtual void foo(int) override; // legal
+    virtual void foo(float) override; // illegal, no such virtual function
+};
+</code></pre>
+</li>
+<li>
+<p><code>final</code> : 阻止繼承或 override</p>
+<pre><code class="language-cpp">struct Base {
+    virtual void foo() final;
+};
+struct SubClass1 final: Base {
+}; // legal
+
+struct SubClass2 : SubClass1 {
+}; // illegal, SubClass1 has final
+
+struct SubClass3: Base {
+    void foo(); // illegal, foo has final
+};
+</code></pre>
+</li>
+<li>
+<p>拒絕或明確要求預設實作（用於 constructor 或 operator 等等）：</p>
+<pre><code class="language-cpp">class Magic {
+    public:
+    Magic() = default; // explicit let compiler use default constructor
+    Magic&amp; operator=(const Magic&amp;) = delete; // explicit declare refuse constructor
+    Magic(int magic_number);
+}
+</code></pre>
+</li>
+<li>
+<p><code>enum class</code></p>
+<ul>
+<li>與 <code>enum</code> 不同處在於：
+<ul>
+<li>不會預設可以轉換為 int</li>
+<li>多個 <code>enum class</code> 存在相同名稱的 variant 也不會產生名稱衝突</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-cpp">enum class new_enum : unsigned int {
+    value1,
+    value2,
+    value3 = 100,
+    value4 = 100
+};
+</code></pre>
+</li>
+</ul>
+<p>C++17：</p>
+<ul>
+<li>
+<p>可以在 if 條件式宣告變數</p>
+<pre><code class="language-cpp">if (const auto itr = std::find(vec.begin(), vec.end(), 3);
+    itr != vec.end()) {
+    *itr = 4;
+}
+</code></pre>
+</li>
+<li>
+<p>可以對 if statement 使用 <code>constexpr</code></p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+template&lt;typename T&gt;
+auto print_type_info(const T&amp; t) {
+    if constexpr (std::is_integral&lt;T&gt;::value) {
+        return t + 1;
+    } else {
+        return t + 0.001;
+    }
+}
+int main() {
+    std::cout &lt;&lt; print_type_info(5) &lt;&lt; std::endl;
+    std::cout &lt;&lt; print_type_info(3.14) &lt;&lt; std::endl;
+}
+</code></pre>
+</li>
+<li>
+<p>宣告變數時可以解構資料，例如下面的 <code>[x, y, z]</code>：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;tuple&gt;
+
+std::tuple&lt;int, double, std::string&gt; f() {
+    return std::make_tuple(1, 2.3, "456");
+}
+
+int main() {
+    auto [x, y, z] = f();
+    std::cout &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ", " &lt;&lt; z &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+</li>
+<li>
+<p>Template 變動長度參數展開式：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+template&lt;typename ... T&gt;
+auto sum(T ... t) {
+    return (t + ...);
+}
+int main() {
+    std::cout &lt;&lt; sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) &lt;&lt; std::endl;
+}
+</code></pre>
+</li>
+</ul>
+<p>C++20：</p>
+<ul>
+<li>
+<p><code>auto</code> 可以用於 function signature：</p>
+<pre><code class="language-cpp">int add(auto x, auto y) {
+    return x+y;
+}
+
+auto i = 5; // infered as int
+auto j = 6; // infered as int
+std::cout &lt;&lt; add(i, j) &lt;&lt; std::endl;
+</code></pre>
+</li>
+</ul>
+<h2 id="lambda-function"><a class="header" href="#lambda-function">Lambda Function</a></h2>
+<p>類似 Java 的匿名函數，語法如下：</p>
+<pre><code>[capture list] (parameter list) mutable(optional) exception attribute -&gt; return type {
+// function body
+}
+</code></pre>
+<p>其中 <code>[capture list]</code> 代表從 lambda function 外部帶入的變數，注意該變數是在建立 lambda function 的當下就會複製，而不是在呼叫時被複製。</p>
+<pre><code class="language-cpp">void lambda_value_capture() {
+    int value = 1;
+    auto copy_value = [value] {
+        return value;
+    };
+    value = 100;
+    auto stored_value = copy_value();
+    std::cout &lt;&lt; "stored_value = " &lt;&lt; stored_value &lt;&lt; std::endl;
+    // At this moment, stored_value == 1, and value == 100.
+    // Because copy_value has copied when its was created.
+}
+</code></pre>
+<p>Capture list 的格式如下：</p>
+<ul>
+<li><code>[]</code> 空清單</li>
+<li><code>[name1, name2, ...]</code> 最常見，捕獲一系列變數</li>
+<li><code>[&amp;]</code> 捕獲外部參考（copy by reference），讓編譯器自行推斷要捕獲誰</li>
+<li><code>[=]</code> 捕獲外部值（copy by value），讓編譯器自行推斷要捕獲誰</li>
+</ul>
+<p>C++14 加入可以在 capture list 中寫 expression 的能力：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;  // std::make_unique
+#include &lt;utility&gt; // std::move
+
+void lambda_expression_capture() {
+    auto important = std::make_unique&lt;int&gt;(1);
+    auto add = [v1 = 1, v2 = std::move(important)](int x, int y) -&gt; int {
+        return x+y+v1+(*v2);
+    };
+    std::cout &lt;&lt; add(3,4) &lt;&lt; std::endl;
+}
+</code></pre>
+<p>C++14 開始可以在 lambda 使用 <code>auto</code> ：</p>
+<pre><code class="language-cpp">auto add = [](auto x, auto y) {
+    return x+y;
+};
+
+add(1, 2);
+add(1.1, 2.2);
+</code></pre>
+<p>C++11 使用 <code>std::function</code> 統一了所有可呼叫的型別：</p>
+<pre><code class="language-cpp">#include &lt;functional&gt;
+#include &lt;iostream&gt;
+
+int foo(int para) {
+    return para;
+}
+
+int main() {
+    // std::function wraps a function that take int paremeter and returns int value
+    std::function&lt;int(int)&gt; func = foo;
+
+    int important = 10;
+    std::function&lt;int(int)&gt; func2 = [&amp;](int value) -&gt; int {
+        return 1+value+important;
+    };
+    std::cout &lt;&lt; func(10) &lt;&lt; std::endl;
+    std::cout &lt;&lt; func2(10) &lt;&lt; std::endl;
+}
+</code></pre>
+<p>另外也加入了 <code>std::bind</code> 與 <code>std::placeholder</code> 來預先將數值綁定在某些參數上：</p>
+<pre><code class="language-cpp">int foo(int a, int b, int c) {
+    ;
+}
+int main() {
+    // bind parameter 1, 2 on function foo,
+    // and use std::placeholders::_1 as placeholder for the first parameter.
+    auto bindFoo = std::bind(foo, std::placeholders::_1, 1,2);
+    // when call bindFoo, we only need one param left
+    bindFoo(1);
+}
+</code></pre>
+<h2 id="stdmove"><a class="header" href="#stdmove"><code>std::move</code></a></h2>
+<p>C++11 加入了右值參考 <code>T &amp;&amp;</code> 的概念，用途是可以將一個即將被銷毀的數值轉移到另一個物件內。</p>
+<p><code>std::move</code> 提供了將一個左值轉換為右值參考的能力，一旦在 expression 中的右側出現了右值參考，C++ 便不會呼叫 copy constructor，而是改呼叫 move constructor (編譯器預設會實作一個)。</p>
+<p>這個新的作法主要是盡可能地只複製 pointer，而不是整份資料，並同時將舊物件內的 pointer 清除（改成 <code>nullptr</code> ）。</p>
+<p><code>std::move</code> 最常見的用途就是用來避免大量的資料複製。</p>
+<p>考慮以下例子：</p>
+<pre><code class="language-cpp">template &lt;class T&gt;
+swap(T&amp; a, T&amp; b) {
+    T tmp(a);   // we've made a second copy of a
+    a = b;      // we've made a second copy of b (and discarded a copy of a)
+    b = tmp;    // we've made a second copy of tmp (and discarded a copy of b)
+}
+</code></pre>
+<p>使用 <code>std::move</code> 改寫：</p>
+<pre><code class="language-cpp">template &lt;class T&gt;
+swap(T&amp; a, T&amp; b) {
+    T tmp(std::move(a));
+    a = std::move(b);   
+    b = std::move(tmp);
+}
+</code></pre>
+<p>如果 <code>T</code> 是一個資料結構，例如 <code>vector&lt;int&gt;</code> ，那裡面可能就包含大量資料，用第一版就會浪費大量的資源與時間。</p>
+<p>Default move constructor 基本上跟 copy constructor 差不多，只是他不會複製指標指向的資料，而是單純將指標複製一份。同時也會修改原本 class 的 member，把資料都留空。</p>
+<h2 id="containers-1"><a class="header" href="#containers-1">Containers</a></h2>
+<ul>
+<li>
+<p><code>std::array</code></p>
+<ul>
+<li>威力加強版的 array，提供了一些 container 的額外功能：</li>
+</ul>
+<pre><code class="language-cpp">std::array&lt;int, 4&gt; arr = {1, 2, 3, 4};
+
+arr.empty(); // check if container is empty
+arr.size();  // return the size of the container
+
+// iterator support
+for (auto &amp;i : arr)
+{
+    // ...
+}
+
+// use lambda expression for sort
+std::sort(arr.begin(), arr.end(), [](int a, int b) {
+    return b &lt; a;
+});
+
+// illegal, different than C-style array, std::array will not deduce to T*
+// int *arr_p = arr;
+</code></pre>
+</li>
+<li>
+<p><code>std::forward_list</code></p>
+<ul>
+<li>只有單向的 linked list</li>
+</ul>
+</li>
+<li>
+<p><code>unordered_set</code> / <code>unordered_map</code> 跟其他東西</p>
+<ul>
+<li>Hash map 基底的實作，提供 O(1) 插入與查找</li>
+</ul>
+</li>
+<li>
+<p><code>std::tuple</code></p>
+<ul>
+<li><code>std::pair</code> 威力加強版，允許任意數量的組合</li>
+<li>常用 function
+<ul>
+<li><code>std::get</code>: Get the value of a position in the tuple</li>
+<li><code>std::tie</code>: tuple unpacking</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+#include &lt;tuple&gt;
+ 
+std::tuple&lt;double, char, std::string&gt; get_student(int id)
+{
+    switch (id)
+    {
+        case 0: return {3.8, 'A', "Lisa Simpson"};
+        case 1: return {2.9, 'C', "Milhouse Van Houten"};
+        case 2: return {1.7, 'D', "Ralph Wiggum"};
+        case 3: return {0.6, 'F', "Bart Simpson"};
+    }
+ 
+    throw std::invalid_argument("id");
+}
+ 
+int main()
+{
+    const auto student0 = get_student(0);
+    std::cout &lt;&lt; "ID: 0, "
+              &lt;&lt; "GPA: " &lt;&lt; std::get&lt;0&gt;(student0) &lt;&lt; ", "
+              &lt;&lt; "grade: " &lt;&lt; std::get&lt;1&gt;(student0) &lt;&lt; ", "
+              &lt;&lt; "name: " &lt;&lt; std::get&lt;2&gt;(student0) &lt;&lt; '\n';
+ 
+    const auto student1 = get_student(1);
+    std::cout &lt;&lt; "ID: 1, "
+              &lt;&lt; "GPA: " &lt;&lt; std::get&lt;double&gt;(student1) &lt;&lt; ", "
+              &lt;&lt; "grade: " &lt;&lt; std::get&lt;char&gt;(student1) &lt;&lt; ", "
+              &lt;&lt; "name: " &lt;&lt; std::get&lt;std::string&gt;(student1) &lt;&lt; '\n';
+ 
+    double gpa2;
+    char grade2;
+    std::string name2;
+    std::tie(gpa2, grade2, name2) = get_student(2);
+    std::cout &lt;&lt; "ID: 2, "
+              &lt;&lt; "GPA: " &lt;&lt; gpa2 &lt;&lt; ", "
+              &lt;&lt; "grade: " &lt;&lt; grade2 &lt;&lt; ", "
+              &lt;&lt; "name: " &lt;&lt; name2 &lt;&lt; '\n';
+ 
+    // C++17 structured binding:
+    const auto [gpa3, grade3, name3] = get_student(3);
+    std::cout &lt;&lt; "ID: 3, "
+              &lt;&lt; "GPA: " &lt;&lt; gpa3 &lt;&lt; ", "
+              &lt;&lt; "grade: " &lt;&lt; grade3 &lt;&lt; ", "
+              &lt;&lt; "name: " &lt;&lt; name3 &lt;&lt; '\n';
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="smart-pointers"><a class="header" href="#smart-pointers">Smart Pointers</a></h2>
+<ul>
+<li>
+<p><code>std::shared_ptr</code> : 自動計數並銷毀的 pointer</p>
+<pre><code class="language-cpp">auto pointer = std::make_shared&lt;int&gt;(10);
+auto pointer2 = pointer; // reference count+1
+auto pointer3 = pointer; // reference count+1
+int *p = pointer.get();  // no increase of reference count
+
+std::cout &lt;&lt; "pointer.use_count() = " &lt;&lt; pointer.use_count() &lt;&lt; std::endl;   // 3
+std::cout &lt;&lt; "pointer2.use_count() = " &lt;&lt; pointer2.use_count() &lt;&lt; std::endl; // 3
+std::cout &lt;&lt; "pointer3.use_count() = " &lt;&lt; pointer3.use_count() &lt;&lt; std::endl; // 3
+
+pointer2.reset();
+std::cout &lt;&lt; "reset pointer2:" &lt;&lt; std::endl;
+
+std::cout &lt;&lt; "pointer.use_count() = " &lt;&lt; pointer.use_count() &lt;&lt; std::endl;   // 2
+std::cout &lt;&lt; "pointer2.use_count() = " 
+    &lt;&lt; pointer2.use_count() &lt;&lt; std::endl;                // pointer2 has reset, 0
+std::cout &lt;&lt; "pointer3.use_count() = " &lt;&lt; pointer3.use_count() &lt;&lt; std::endl; // 2
+</code></pre>
+</li>
+<li>
+<p><code>std::unique_ptr</code> : 只允許一個變數的 pointer</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt; // std::cout
+#include &lt;memory&gt;
+
+int main()
+{
+  auto pointer = std::make_unique&lt;int&gt;(10);  // make_unique, from C++14
+  // auto pointer2 = pointer;                // copy is illegal
+  auto pointer3 = std::move(pointer);        // move is OK
+  std::cout &lt;&lt; pointer &lt;&lt; std::endl;
+  std::cout &lt;&lt; pointer3 &lt;&lt; std::endl;
+}
+</code></pre>
+</li>
+<li>
+<p><code>std::weak_ptr</code> : 弱指針，不會引起 <code>shared_ptr</code> 計數增加</p>
+<ul>
+<li>
+<p>主要是用來避免下圖的 cycle share 問題：</p>
+<p><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/90130fb6-82ad-49ff-9656-f23eef83d45d/bc344694-84cb-4491-96f3-8d1d26059d53/Untitled.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>用法：直接 assign <code>shared_ptr</code> 給 <code>weak_ptr</code> 即可</p>
+<pre><code class="language-cpp">std::shared_ptr&lt;int&gt; a = std::make_shared&lt;int&gt;(42);
+std::weak_ptr&lt;int&gt; b = a;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="沒搞懂的東西"><a class="header" href="#沒搞懂的東西">沒搞懂的東西</a></h2>
+<ul>
+<li><code>decltype(auto)</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-concurrency"><a class="header" href="#c-concurrency">C++ Concurrency</a></h1>
+<h2 id="stdthread"><a class="header" href="#stdthread"><code>std::thread</code></a></h2>
+<p>C++11 引入了標準的 thread 函式庫，用法如下：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+
+int main() {
+    std::thread t([](){
+        std::cout &lt;&lt; "hello world." &lt;&lt; std::endl;
+    });
+    t.join();
+    return 0;
+}
+</code></pre>
+<h2 id="locks"><a class="header" href="#locks">Locks</a></h2>
+<ul>
+<li><code>std::mutex</code> :  lock 的基本元件，提供 lock 與 unlock 功能建立 critical section
+<ul>
+<li>不建議直接使用</li>
+</ul>
+</li>
+<li><code>std::lock_guard</code> : <code>std::mutex</code> 的 wrapper，在創建時自動 lock mutex，解構時自動 unlock</li>
+<li><code>std::unique_lock</code> : <code>std::mutex</code> 的 wrapper，創建時自動 lock，中途可以選擇 unlock 並再度 lock，解構時會自動 unlock
+<ul>
+<li>
+<p>建議優先選擇用這個</p>
+</li>
+<li>
+<p>範例：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+
+int v = 1;
+
+void critical_section(int change_v) {
+    static std::mutex mtx;
+    std::unique_lock&lt;std::mutex&gt; lock(mtx);
+    // do contention operations
+    v = change_v;
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+    // release the lock
+    lock.unlock();
+
+    // during this period, others are allowed to acquire v
+
+    // start another group of contention operations
+    // lock again
+    lock.lock();
+    v += 1;
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+    // Unlock when it disappears
+}
+
+int main() {
+    std::thread t1(critical_section, 2), t2(critical_section, 3);
+    t1.join();
+    t2.join();
+    return 0;
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="stdfuture"><a class="header" href="#stdfuture"><code>std::future</code></a></h2>
+<p>一個用來建立 task，等待未來回收結果的 utility 元件。</p>
+<p>詳情：<a href="https://changkun.de/modern-cpp/zh-cn/07-thread/#7-3-%E6%9C%9F%E7%89%A9">https://changkun.de/modern-cpp/zh-cn/07-thread/#7-3-期物</a></p>
+<h2 id="stdcondition_variable"><a class="header" href="#stdcondition_variable"><code>std::condition_variable</code></a></h2>
+<p>提供 <code>wait()</code> 與 <code>notify_all()</code> 與 <code>notify_one()</code> 的功能，讓 thread 可以進入等待狀態，其他 thread 也可以叫醒等待的 thread</p>
+<p>範例：<a href="https://changkun.de/modern-cpp/zh-cn/07-thread/#7-4-%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F">https://changkun.de/modern-cpp/zh-cn/07-thread/#7-4-条件变量</a></p>
+<h2 id="stdatomic"><a class="header" href="#stdatomic"><code>std::atomic</code></a></h2>
+<p>如果要對一個變數進行 atomic 操作，除了使用 <code>std::mutex</code> 之外，也可以使用 <code>std::atomic</code> 。 <code>std::mutex</code> 實際上在編譯成 CPU 指令其實非常複雜，但對一個只是單純需要 atomic 操作的狀況來說 overkilled 了。</p>
+<pre><code class="language-cpp">#include &lt;atomic&gt;
+#include &lt;thread&gt;
+#include &lt;iostream&gt;
+
+std::atomic&lt;int&gt; count = {0};
+
+int main() {
+    std::thread t1([](){
+        count.fetch_add(1);
+    });
+    std::thread t2([](){
+        count++;        // identical to fetch_add
+        count += 1;     // identical to fetch_add
+    });
+    t1.join();
+    t2.join();
+    std::cout &lt;&lt; count &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<p>因為其是一個 template，可以容納任何類型的資料，因此 C++ 有提供額外的 API 檢查該類型資料是否有保障原子性：</p>
+<pre><code class="language-cpp">#include &lt;atomic&gt;
+#include &lt;iostream&gt;
+
+struct A {
+    float x;
+    int y;
+    long long z;
+};
+
+int main() {
+    std::atomic&lt;A&gt; a;
+    std::cout &lt;&lt; std::boolalpha &lt;&lt; a.is_lock_free() &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
 
                     </main>
 

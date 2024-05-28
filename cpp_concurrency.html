@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Page not found - 小山的 C++ 快速上手筆記</title>
-        <base href="/">
+        <title>C++ Concurrency - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html" class="active"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,13 +173,123 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="c-concurrency"><a class="header" href="#c-concurrency">C++ Concurrency</a></h1>
+<h2 id="stdthread"><a class="header" href="#stdthread"><code>std::thread</code></a></h2>
+<p>C++11 引入了標準的 thread 函式庫，用法如下：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+
+int main() {
+    std::thread t([](){
+        std::cout &lt;&lt; "hello world." &lt;&lt; std::endl;
+    });
+    t.join();
+    return 0;
+}
+</code></pre>
+<h2 id="locks"><a class="header" href="#locks">Locks</a></h2>
+<ul>
+<li><code>std::mutex</code> :  lock 的基本元件，提供 lock 與 unlock 功能建立 critical section
+<ul>
+<li>不建議直接使用</li>
+</ul>
+</li>
+<li><code>std::lock_guard</code> : <code>std::mutex</code> 的 wrapper，在創建時自動 lock mutex，解構時自動 unlock</li>
+<li><code>std::unique_lock</code> : <code>std::mutex</code> 的 wrapper，創建時自動 lock，中途可以選擇 unlock 並再度 lock，解構時會自動 unlock
+<ul>
+<li>
+<p>建議優先選擇用這個</p>
+</li>
+<li>
+<p>範例：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+
+int v = 1;
+
+void critical_section(int change_v) {
+    static std::mutex mtx;
+    std::unique_lock&lt;std::mutex&gt; lock(mtx);
+    // do contention operations
+    v = change_v;
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+    // release the lock
+    lock.unlock();
+
+    // during this period, others are allowed to acquire v
+
+    // start another group of contention operations
+    // lock again
+    lock.lock();
+    v += 1;
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+    // Unlock when it disappears
+}
+
+int main() {
+    std::thread t1(critical_section, 2), t2(critical_section, 3);
+    t1.join();
+    t2.join();
+    return 0;
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="stdfuture"><a class="header" href="#stdfuture"><code>std::future</code></a></h2>
+<p>一個用來建立 task，等待未來回收結果的 utility 元件。</p>
+<p>詳情：<a href="https://changkun.de/modern-cpp/zh-cn/07-thread/#7-3-%E6%9C%9F%E7%89%A9">https://changkun.de/modern-cpp/zh-cn/07-thread/#7-3-期物</a></p>
+<h2 id="stdcondition_variable"><a class="header" href="#stdcondition_variable"><code>std::condition_variable</code></a></h2>
+<p>提供 <code>wait()</code> 與 <code>notify_all()</code> 與 <code>notify_one()</code> 的功能，讓 thread 可以進入等待狀態，其他 thread 也可以叫醒等待的 thread</p>
+<p>範例：<a href="https://changkun.de/modern-cpp/zh-cn/07-thread/#7-4-%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F">https://changkun.de/modern-cpp/zh-cn/07-thread/#7-4-条件变量</a></p>
+<h2 id="stdatomic"><a class="header" href="#stdatomic"><code>std::atomic</code></a></h2>
+<p>如果要對一個變數進行 atomic 操作，除了使用 <code>std::mutex</code> 之外，也可以使用 <code>std::atomic</code> 。 <code>std::mutex</code> 實際上在編譯成 CPU 指令其實非常複雜，但對一個只是單純需要 atomic 操作的狀況來說 overkilled 了。</p>
+<pre><code class="language-cpp">#include &lt;atomic&gt;
+#include &lt;thread&gt;
+#include &lt;iostream&gt;
+
+std::atomic&lt;int&gt; count = {0};
+
+int main() {
+    std::thread t1([](){
+        count.fetch_add(1);
+    });
+    std::thread t2([](){
+        count++;        // identical to fetch_add
+        count += 1;     // identical to fetch_add
+    });
+    t1.join();
+    t2.join();
+    std::cout &lt;&lt; count &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<p>因為其是一個 template，可以容納任何類型的資料，因此 C++ 有提供額外的 API 檢查該類型資料是否有保障原子性：</p>
+<pre><code class="language-cpp">#include &lt;atomic&gt;
+#include &lt;iostream&gt;
+
+struct A {
+    float x;
+    int y;
+    long long z;
+};
+
+int main() {
+    std::atomic&lt;A&gt; a;
+    std::cout &lt;&lt; std::boolalpha &lt;&lt; a.is_lock_free() &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="modern_cpp.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
 
                         <div style="clear: both"></div>
@@ -189,6 +298,9 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="modern_cpp.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
             </nav>
 

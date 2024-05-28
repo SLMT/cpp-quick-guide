@@ -1,0 +1,427 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>C++ OOP - 小山的 C++ 快速上手筆記</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html" class="active"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">小山的 C++ 快速上手筆記</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="c-oop"><a class="header" href="#c-oop">C++ OOP</a></h1>
+<h2 id="class-definition"><a class="header" href="#class-definition">Class Definition</a></h2>
+<p>基本例子：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+ 
+using namespace std;
+ 
+class Box {
+   public:
+      double length;
+      void setWidth( double wid );
+      double getWidth( void );
+ 
+   private:
+      double width;
+};
+ 
+// Member functions definitions
+double Box::getWidth(void) {
+   return width ;
+}
+ 
+void Box::setWidth( double wid ) {
+   width = wid;
+}
+ 
+// Main function for the program
+int main() {
+   Box box;
+ 
+   // set box length without member function
+   box.length = 10.0; // OK: because length is public
+   cout &lt;&lt; "Length of box : " &lt;&lt; box.length &lt;&lt;endl;
+ 
+   // set box width without member function
+   // box.width = 10.0; // Error: because width is private
+   box.setWidth(10.0);  // Use member function to set it.
+   cout &lt;&lt; "Width of box : " &lt;&lt; box.getWidth() &lt;&lt;endl;
+ 
+   return 0;
+}
+</code></pre>
+<h2 id="initialization-list"><a class="header" href="#initialization-list">Initialization List</a></h2>
+<p>在 constructor 上可以加上特殊的 list 初始化 properties，如下：</p>
+<pre><code class="language-cpp">C::C( double a, double b, double c): X(a), Y(b), Z(c) {
+   ....
+}
+</code></pre>
+<h2 id="copy-constructor"><a class="header" href="#copy-constructor">Copy Constructor</a></h2>
+<p>C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製資料的能力，形式如下：</p>
+<pre><code class="language-cpp">classname (const classname &amp;obj) {
+   // body of constructor
+}
+</code></pre>
+<p>如果沒有的話 C++ 會自動創建一個預設的，做法是會呼叫所有 member variable 的 copy constructor 實現 deep copy。</p>
+<h2 id="friend-functions--classes"><a class="header" href="#friend-functions--classes">Friend Functions &amp; Classes</a></h2>
+<p>Class 內可以定義 friend function 與 class 如下：</p>
+<pre><code class="language-java">class Box {
+   double width;
+   
+   public:
+      double length;
+      friend void printWidth( Box box );
+      void setWidth( double wid );
+			friend class ClassTwo;
+};
+</code></pre>
+<p>這樣寫代表外面的 <code>printWidth</code> 與 <code>ClassTwo</code> 就可以直接存取 Box 的變數 <code>width</code></p>
+<h2 id="static-members"><a class="header" href="#static-members">Static Members</a></h2>
+<p>C++ 的 class 可以定義 static member，但變數的初始化必須要寫在 class definition 外面：</p>
+<pre><code class="language-java">// foo.h
+class foo
+{
+    private:
+        static int i;
+};
+
+// foo.cpp
+int foo::i = 0;
+</code></pre>
+<p>其他特性基本跟 Java 的 static 相同。</p>
+<h2 id="繼承性"><a class="header" href="#繼承性">繼承性</a></h2>
+<p>與 Java 的關鍵差異：</p>
+<ul>
+<li>可以繼承多個 class
+<ul>
+<li>類似 Rust 的 trait implementation</li>
+</ul>
+</li>
+<li>繼承時可以設定 access modifier
+<ul>
+<li>
+<p>例如下面的例子將 base class 設定為 public</p>
+<pre><code class="language-java">// Base class
+class Shape {
+   // ...
+};
+
+// Derived class
+class Rectangle: public Shape {
+   // ...
+};
+</code></pre>
+</li>
+<li>
+<p>這個用途是可以修改原本 base class 內的 member 存取性質，但只能改得更嚴格，不能放得更鬆</p>
+<ul>
+<li>設定為 public ⇒ 不修改 base class 的 member</li>
+<li>設定為 protected ⇒ 原本是 public 的 member 都會變成 protected</li>
+<li>設定為 private ⇒ 原本是 public 與 protected 的 member 會變成 private</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="operators-overloading"><a class="header" href="#operators-overloading"><strong>Operators Overloading</strong></a></h2>
+<p>C++ 的一大特色就是可以修改 operator 對 class 造成的效果 (Rust 也有)</p>
+<p>假設有一個 <code>Box</code> class，修改 <code>+</code> 的效果方式如下：</p>
+<pre><code class="language-java">class Box {
+   public:
+      // ...
+      
+      // Overload + operator to add two Box objects.
+      Box operator+(const Box&amp; b) {
+         Box box;
+         box.length = this-&gt;length + b.length;
+         box.breadth = this-&gt;breadth + b.breadth;
+         box.height = this-&gt;height + b.height;
+         return box;
+   // ...
+}
+</code></pre>
+<h2 id="function-override--virtual-functions"><a class="header" href="#function-override--virtual-functions">Function Override &amp; Virtual Functions</a></h2>
+<p>在 C++ 中，如果衍伸類別要改寫基底類別的 method，基底類別就必須要將 method 定義為 virtual：</p>
+<pre><code class="language-java">class Shape {
+   protected:
+      int width, height;
+
+   public:
+      Shape( int a = 0, int b = 0){
+         width = a;
+         height = b;
+      }
+      virtual int area() {
+         cout &lt;&lt; "Parent class area :" &lt;&lt; width * height &lt;&lt; endl;
+         return width * height;
+      }
+};
+class Triangle: public Shape {
+   public:
+      Triangle( int a = 0, int b = 0):Shape(a, b) { }
+
+      int area () {
+         cout &lt;&lt; "Triangle class area :" &lt;&lt; (width * height)/2 &lt;&lt; endl;
+         return (width * height / 2);
+      }
+};
+</code></pre>
+<p>這是因為 C++ 在 class 建立時，預設會用 static linkage 綁定 function 的定義，而這個會導致當一個 function 被呼叫時，「只會根據其 variable type 來判斷該呼叫哪一個 function」。也就是說，無論實際上物件是 <code>Shape</code> 還是 <code>Triangle</code> ，只要他是 <code>Shape</code> 的變數，就會呼叫到 <code>Shape</code> 的 <code>area()</code> 。</p>
+<p>如果將 function 設定為 virtual，C++ 就會知道該將 function 改用 dynamic linkage 處理，他會根據當下 object 的實際類別來判斷該呼叫哪一個 function (使用 vtable)。</p>
+<p>簡單的比較例子：</p>
+<pre><code class="language-java">class Base
+{
+  public:
+            void Method1 ()  {  std::cout &lt;&lt; "Base::Method1" &lt;&lt; std::endl;  }
+    virtual void Method2 ()  {  std::cout &lt;&lt; "Base::Method2" &lt;&lt; std::endl;  }
+};
+
+class Derived : public Base
+{
+  public:
+    void Method1 ()          {  std::cout &lt;&lt; "Derived::Method1" &lt;&lt; std::endl;  }
+    void Method2 () override {  std::cout &lt;&lt; "Derived::Method2" &lt;&lt; std::endl;  }
+    // Note - override is optional; adding it to Method1 would result in an error
+};
+
+Base* basePtr = new Derived ();
+// Note - constructed as Derived, but pointer stored as Base*
+
+basePtr-&gt;Method1 ();  //  Prints "Base::Method1"
+basePtr-&gt;Method2 ();  //  Prints "Derived::Method2"
+</code></pre>
+<p>來源：https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c</p>
+<h2 id="abstract-methods--abstract-class"><a class="header" href="#abstract-methods--abstract-class">Abstract Methods &amp; Abstract Class</a></h2>
+<p>C++ 並沒有 <code>abstract</code> 關鍵字，但是可以用別的方式做到相同效果。</p>
+<p>只要單純宣告但不定義 virtual function，並且加上 <code>= 0</code> ，就稱之為 pure virtual function：</p>
+<pre><code class="language-java">virtual int area() = 0;
+</code></pre>
+<p>這等同於 Java 的 abstract method。</p>
+<p>只要 class 中包含至少一個 pure virtual function，那麼該 class 就不能被實體化，因此效果等同於 abstract class。</p>
+<h2 id="class-vs-struct"><a class="header" href="#class-vs-struct">Class vs. Struct</a></h2>
+<p>C++ 的 class 與 struct 其實沒有太大的差別，只是在以下幾點：</p>
+<ul>
+<li>Class 的 member 預設是 private，struct 是 public
+<ul>
+<li>繼承的時候也類似，class 預設會是 private 繼承</li>
+</ul>
+</li>
+<li>Class 可以當作 template 的關鍵字用，struct 不行</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="cpp_stl.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="cpp_advanced.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="cpp_stl.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="cpp_advanced.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

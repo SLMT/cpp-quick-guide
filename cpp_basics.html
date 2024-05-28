@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Page not found - 小山的 C++ 快速上手筆記</title>
-        <base href="/">
+        <title>C++ Basics - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html" class="active"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,14 +173,200 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="c-basics"><a class="header" href="#c-basics">C++ Basics</a></h1>
+<h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
+<ul>
+<li><code>bool</code> : boolean</li>
+<li><code>wchar_t</code> : wide characters (16 bits)</li>
+<li>固定長度型別
+<ul>
+<li><code>int64_t</code> : 64-bit 整數</li>
+<li>https://en.cppreference.com/w/cpp/types/integer</li>
+</ul>
+</li>
+</ul>
+<h2 id="檢查-max--min"><a class="header" href="#檢查-max--min">檢查 Max &amp; Min</a></h2>
+<ul>
+<li>Method 1: 內建常數
+<ul>
+<li><code>INT32_MAX</code> 等等</li>
+</ul>
+</li>
+<li>Method 2:  <code>std::numeric_limits&lt;T&gt;::min()</code>
+<ul>
+<li><code>T</code> 可以換成任意內建型別</li>
+</ul>
+</li>
+</ul>
+<h2 id="宣告變數"><a class="header" href="#宣告變數">宣告變數</a></h2>
+<ul>
+<li>Storage Class
+<ul>
+<li><code>auto</code> : 跟代表自動推導的 <code>auto</code> 不同，代表變數存放的位置是自動決定</li>
+<li><code>register</code> : 要求存在 register (C++11 之後 deprecated)</li>
+<li><code>static</code> :
+<ul>
+<li>用在 local variable 會讓這個 local variable 的值與記憶體空間一直保留到程式結束</li>
+<li>用在 global variable 會限制該 variable 的 scope 在所在的 file 中</li>
+<li>用在 class member 會讓該 member shared 在所有 object 中</li>
+</ul>
+</li>
+<li><code>extern</code> : 代表變數定義在其他檔案內，linking 時才會引入
+<ul>
+<li>Example: <code>extern int num</code></li>
+<li>https://learn.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170</li>
+</ul>
+</li>
+<li><code>mutable</code> : (TODO)</li>
+</ul>
+</li>
+<li>全域變數宣告時會自動初始化為 NULL/0</li>
+</ul>
+<h2 id="type-qualifiers"><a class="header" href="#type-qualifiers"><strong>Type Qualifiers</strong></a></h2>
+<ul>
+<li><code>const</code> : 常數</li>
+<li><code>volatile</code> : 主要作用，防止存取此變數的動作因為 optimization 被調換位置
+<ul>
+<li>通常也會要求 CPU 不能快取此變數</li>
+</ul>
+</li>
+<li><code>restrict</code> : 限制只有此指標變數可以指向該記憶體位置
+<ul>
+<li>屬於 C99 標準，非 C++ 標準</li>
+<li>https://wucodingroad.blogspot.com/2017/05/Cplusplus-restrict.html</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference"><a class="header" href="#reference">Reference</a></h2>
+<p>Reference 是 C++ 引入給變數設定「別名」的功能，跟 pointer 差異如下：</p>
+<ul>
+<li>Null 值：Pointer 允許 NULL，Reference 不行</li>
+<li>修改指向位置：Pointer 的變數可以途中修改成指向其他記憶體位置，Reference 不行</li>
+<li>初始化：Reference 初始化時一定要設定指向的變數，Pointer 沒有限制</li>
+</ul>
+<p>宣告方式：</p>
+<pre><code class="language-cpp">// declare simple variables
+int    i;
+double d;
+
+// declare reference variables
+int&amp;    r = i;
+double&amp; s = d;
+</code></pre>
+<p>Reference 可以從 function 被 return：</p>
+<pre><code class="language-cpp">double&amp; setValues( int i ) {
+   return vals[i];   // return a reference to the ith element
+}
+</code></pre>
+<p>但要注意不能 return local variable 的 reference</p>
+<h2 id="arrays"><a class="header" href="#arrays">Arrays</a></h2>
+<ul>
+<li>
+<p>宣告方式： <code>double a[10];</code></p>
+</li>
+<li>
+<p>多維陣列： <code>int threedim[5][10][4];</code></p>
+</li>
+<li>
+<p>初始化： <code>double balance[] = {1000.0, 2.0, 3.4, 17.0, 50.0};</code></p>
+</li>
+<li>
+<p>初始化二維陣列：</p>
+<pre><code class="language-cpp">int a[3][4] = {
+   {0, 1, 2, 3} ,   /*  initializers for row indexed by 0 */
+   {4, 5, 6, 7} ,   /*  initializers for row indexed by 1 */
+   {8, 9, 10, 11}   /*  initializers for row indexed by 2 */
+};
+</code></pre>
+</li>
+<li>
+<p>Array 的變數其實就是 pointer：</p>
+<pre><code class="language-cpp">double *p;
+double balance[10];
+
+p = balance;
+</code></pre>
+<ul>
+<li><code>balance[4]</code> 等價於 <code>*(balance + 4)</code></li>
+</ul>
+</li>
+<li>
+<p>Array 作為 paramater 傳進 function 方法有兩種常見方式：</p>
+<ul>
+<li>
+<p>Method 1: 用 pointer</p>
+<pre><code class="language-cpp">void myFunction(int *param) {
+   // ...
+}
+</code></pre>
+</li>
+<li>
+<p>Method 2: 用 unsized array</p>
+<pre><code class="language-cpp">void myFunction(int param[]) {
+   // ...
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>從 function return array 只有一種做法，就是回傳 pointer：</p>
+<pre><code class="language-cpp">int * myFunction() {
+   // ...
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="c-string"><a class="header" href="#c-string">C++ String</a></h2>
+<p>C++ 有內建 String 型別，所以可以不使用 C-style string (也就是字元陣列)</p>
+<p>使用方式：</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+using std::string;
+
+string s = "aabbcc";
+s.size(); // return 6
+s.find("bb"); // return 2
+s += "123"; // s = aabbcc123
+</code></pre>
+<p>字面值直接使用 string 型別（省掉一個轉換步驟）：</p>
+<pre><code class="language-cpp">using namespace std::literals;
+string s3_2 = "hello world"s;
+</code></pre>
+<p>基本操作：</p>
+<pre><code class="language-cpp">os &lt;&lt; s // 輸出 s 
+is &gt;&gt; s // 輸入 s
+s.empty() // 檢查 s 是否為空
+s.size() // s 目前長度
+s[n] // 直接取得 s 的第 n 個元素
+s.at(n) // 同樣取得第 n 個元素，但會檢查邊界
+s1 + s2 // 把 s1 加 s2 取得新的字串
+s1.append(s2) // 把 s2 加到 s1 後面，不會產生新字串
+s1 += s2 // 等價於 s1.append(s2)
+s1 = s2 //　拷貝複製 s2
+s1 != s2 // 比較 s1 和 s2 是否相同
+&lt;, &lt;=, ==, &gt;=, &gt; // 做大小比較，以字典排序
+</code></pre>
+<p>完整 C++ String 教學：https://tigercosmos.xyz/post/2023/06/c++/std-string-beginner/</p>
+<h2 id="standard-inputoutput"><a class="header" href="#standard-inputoutput">Standard Input/Output</a></h2>
+<p>C++ 有以下幾個常用的 input/output streams</p>
+<ul>
+<li><code>cin</code> : 標準輸入</li>
+<li><code>cout</code> : 標準輸出</li>
+<li><code>cerr</code> : 標準錯誤（但沒有 buffer）</li>
+<li><code>clog</code> : 標準錯誤（但有 buffer）</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
+                            <a rel="next prefetch" href="cpp_stl.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -189,7 +374,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
+                    <a rel="next prefetch" href="cpp_stl.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
