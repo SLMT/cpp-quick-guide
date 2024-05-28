@@ -1,0 +1,6 @@
+[book]
+authors = ["SLMT (Yu-Shan Lin)"]
+language = "zh-TW"
+multilingual = false
+src = "src"
+title = "C++ 快速上手手冊"
