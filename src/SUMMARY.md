@@ -1,8 +1,8 @@
 # Summary
 
-[Introduction](./introduction.md)
+[簡介](./introduction.md)
 
-- [C++ Basics](./cpp_basics.md)
+- [C++ 基礎知識加強](./cpp_basics.md)
 - [C++ STL](./cpp_stl.md)
 - [C++ OOP](./cpp_oop.md)
 - [C++ Advanced](./cpp_advanced.md)

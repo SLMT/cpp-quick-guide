@@ -2,10 +2,17 @@
 
 [![Deploy](https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml/badge.svg)](https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml)
 
-本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提上快速上手所做的筆記。
+本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提下快速上手所做的筆記。
 
 - 本書網址： [https://www.slmt.tw/cpp-quick-start/](https://www.slmt.tw/cpp-quick-start/)
 - 本書 Repository： [https://github.com/SLMT/cpp-quick-start](https://github.com/SLMT/cpp-quick-start)
+
+## 先備知識
+
+預期閱讀此筆記前，假定讀者已經：
+
+- 學習過 C 語言（或類似語法的語言）
+- 熟悉其他物件導向 (OOP) 程式語言 (e.g., Java, JavaScript, Golang...)
 
 ## 內容哪裡來的？
 
