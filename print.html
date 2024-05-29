@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ Basics</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,10 +176,16 @@
                     <main>
                         <h1 id="小山的-c-快速上手筆記"><a class="header" href="#小山的-c-快速上手筆記">小山的 C++ 快速上手筆記</a></h1>
 <p><a href="https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml"><img src="https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml/badge.svg" alt="Deploy" /></a></p>
-<p>本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提上快速上手所做的筆記。</p>
+<p>本書是為了讓不熟悉 C++ 的人，在有接觸過其他 OOP 程式語言（例如 Java）的前提下快速上手所做的筆記。</p>
 <ul>
 <li>本書網址： <a href="https://www.slmt.tw/cpp-quick-start/">https://www.slmt.tw/cpp-quick-start/</a></li>
 <li>本書 Repository： <a href="https://github.com/SLMT/cpp-quick-start">https://github.com/SLMT/cpp-quick-start</a></li>
+</ul>
+<h2 id="先備知識"><a class="header" href="#先備知識">先備知識</a></h2>
+<p>預期閱讀此筆記前，假定讀者已經：</p>
+<ul>
+<li>學習過 C 語言（或類似語法的語言）</li>
+<li>熟悉其他物件導向 (OOP) 程式語言 (e.g., Java, JavaScript, Golang...)</li>
 </ul>
 <h2 id="內容哪裡來的"><a class="header" href="#內容哪裡來的">內容哪裡來的？</a></h2>
 <p>這本筆記的內容主要是我從以下網站中整理出來的重點回顧：</p>
@@ -189,37 +195,43 @@
 <li>GeeksforGeeks - The C++ Standard Template Library (STL)： <a href="https://www.geeksforgeeks.org/the-c-standard-template-library-stl/">https://www.geeksforgeeks.org/the-c-standard-template-library-stl/</a></li>
 <li>现代 C++ 教程：高速上手 C++ 11/14/17/20： <a href="https://changkun.de/modern-cpp/">https://changkun.de/modern-cpp/</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="c-basics"><a class="header" href="#c-basics">C++ Basics</a></h1>
-<h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c-基礎知識加強"><a class="header" href="#c-基礎知識加強">C++ 基礎知識加強</a></h1>
+<p>加強一些 C++ 與其他語言不同之處。</p>
+<h2 id="特別資料型別"><a class="header" href="#特別資料型別">特別資料型別</a></h2>
 <ul>
-<li><code>bool</code> : boolean</li>
-<li><code>wchar_t</code> : wide characters (16 bits)</li>
-<li>固定長度型別
+<li><code>bool</code> : boolean 型別</li>
+<li><code>wchar_t</code> : wide characters (16 bits) 字元，用來補足原本的 <code>char</code> 型別大小不足的問題，以支援 Unicode</li>
+<li>固定大小整數型別，避免了傳統 C 語言的 <code>int</code> 等型別大小不固定的問題，例如：
 <ul>
-<li><code>int64_t</code> : 64-bit 整數</li>
-<li>https://en.cppreference.com/w/cpp/types/integer</li>
+<li><code>int64_t</code>: 64-bit 整數</li>
+<li><code>uint32_t</code>: 32-bit 無號整數</li>
+<li>完整清單： <a href="https://en.cppreference.com/w/cpp/types/integer">https://en.cppreference.com/w/cpp/types/integer</a></li>
 </ul>
 </li>
 </ul>
-<h2 id="檢查-max--min"><a class="header" href="#檢查-max--min">檢查 Max &amp; Min</a></h2>
+<h2 id="取得型別的-max--min"><a class="header" href="#取得型別的-max--min">取得型別的 Max &amp; Min</a></h2>
 <ul>
-<li>Method 1: 內建常數
+<li>方法一: 使用內建常數
 <ul>
-<li><code>INT32_MAX</code> 等等</li>
+<li><code>INT32_MAX</code> (需要引入 <code>stdint.h</code>)</li>
 </ul>
 </li>
-<li>Method 2:  <code>std::numeric_limits&lt;T&gt;::min()</code>
+<li>方法二:  <code>std::numeric_limits&lt;T&gt;::min()</code>
 <ul>
 <li><code>T</code> 可以換成任意內建型別</li>
 </ul>
 </li>
 </ul>
-<h2 id="宣告變數"><a class="header" href="#宣告變數">宣告變數</a></h2>
+<h2 id="變數宣告修飾子"><a class="header" href="#變數宣告修飾子">變數宣告修飾子</a></h2>
 <ul>
 <li>Storage Class
 <ul>
-<li><code>auto</code> : 跟代表自動推導的 <code>auto</code> 不同，代表變數存放的位置是自動決定</li>
-<li><code>register</code> : 要求存在 register (C++11 之後 deprecated)</li>
+<li><code>auto</code> : 跟代表自動推導的 <code>auto</code> 不同，限制變數只能被宣告的 scope 內的程式碼存取，預設情況下 local variable 前都會自動加上 <code>auto</code>
+<ul>
+<li>Example： <code>auto int a = 1</code></li>
+</ul>
+</li>
+<li><code>register</code> : 提示 compiler 將變數存在 CPU register (C++11 之後 deprecated)</li>
 <li><code>static</code> :
 <ul>
 <li>用在 local variable 會讓這個 local variable 的值與記憶體空間一直保留到程式結束</li>
@@ -230,35 +242,35 @@
 <li><code>extern</code> : 代表變數定義在其他檔案內，linking 時才會引入
 <ul>
 <li>Example: <code>extern int num</code></li>
-<li>https://learn.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170</li>
+<li>說明：<a href="https://learn.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170">https://learn.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170</a></li>
 </ul>
 </li>
-<li><code>mutable</code> : (TODO)</li>
+<li><code>mutable</code> : 只能用在 class member 上，當物件的變數被指定為 <code>const</code> 時，該 class member 仍能夠被外界修改。</li>
 </ul>
 </li>
-<li>全域變數宣告時會自動初始化為 NULL/0</li>
+<li>全域變數宣告時會自動初始化為 <code>NULL</code> / <code>0</code></li>
 </ul>
-<h2 id="type-qualifiers"><a class="header" href="#type-qualifiers"><strong>Type Qualifiers</strong></a></h2>
+<h2 id="type-qualifiers"><a class="header" href="#type-qualifiers">Type Qualifiers</a></h2>
 <ul>
 <li><code>const</code> : 常數</li>
-<li><code>volatile</code> : 主要作用，防止存取此變數的動作因為 optimization 被調換位置
+<li><code>volatile</code> : 防止存取此變數的動作因為 compiler optimization 的關係被調換位置
 <ul>
-<li>通常也會要求 CPU 不能快取此變數</li>
+<li>同時也限制 CPU 不能快取此變數在 CPU cache (multi-threading 時很重要)</li>
 </ul>
 </li>
 <li><code>restrict</code> : 限制只有此指標變數可以指向該記憶體位置
 <ul>
 <li>屬於 C99 標準，非 C++ 標準</li>
-<li>https://wucodingroad.blogspot.com/2017/05/Cplusplus-restrict.html</li>
+<li><a href="https://wucodingroad.blogspot.com/2017/05/Cplusplus-restrict.html">https://wucodingroad.blogspot.com/2017/05/Cplusplus-restrict.html</a></li>
 </ul>
 </li>
 </ul>
-<h2 id="reference"><a class="header" href="#reference">Reference</a></h2>
-<p>Reference 是 C++ 引入給變數設定「別名」的功能，跟 pointer 差異如下：</p>
+<h2 id="reference-參考"><a class="header" href="#reference-參考">Reference (參考)</a></h2>
+<p>Reference 是 C++ 引入給變數設定「別名」的功能，跟 pointer 關鍵差異如下：</p>
 <ul>
-<li>Null 值：Pointer 允許 NULL，Reference 不行</li>
-<li>修改指向位置：Pointer 的變數可以途中修改成指向其他記憶體位置，Reference 不行</li>
-<li>初始化：Reference 初始化時一定要設定指向的變數，Pointer 沒有限制</li>
+<li>Null 值：Pointer 允許 <code>NULL</code>，reference 不行</li>
+<li>修改指向位置：Pointer 的變數可以途中修改成指向其他記憶體位置，reference 不行</li>
+<li>初始化：Reference 初始化時一定要設定指向的變數，pointer 沒有限制</li>
 </ul>
 <p>宣告方式：</p>
 <pre><code class="language-cpp">// declare simple variables
@@ -344,7 +356,7 @@ s.size(); // return 6
 s.find("bb"); // return 2
 s += "123"; // s = aabbcc123
 </code></pre>
-<p>字面值直接使用 string 型別（省掉一個轉換步驟）：</p>
+<p>字面值直接使用 string 型別（省掉一個轉換步驟，需要 <code>using namespace std::literals</code>）：</p>
 <pre><code class="language-cpp">using namespace std::literals;
 string s3_2 = "hello world"s;
 </code></pre>
@@ -362,7 +374,7 @@ s1 = s2 //　拷貝複製 s2
 s1 != s2 // 比較 s1 和 s2 是否相同
 &lt;, &lt;=, ==, &gt;=, &gt; // 做大小比較，以字典排序
 </code></pre>
-<p>完整 C++ String 教學：https://tigercosmos.xyz/post/2023/06/c++/std-string-beginner/</p>
+<p>完整 C++ String 教學： <a href="https://tigercosmos.xyz/post/2023/06/c++/std-string-beginner/">https://tigercosmos.xyz/post/2023/06/c++/std-string-beginner/</a></p>
 <h2 id="standard-inputoutput"><a class="header" href="#standard-inputoutput">Standard Input/Output</a></h2>
 <p>C++ 有以下幾個常用的 input/output streams</p>
 <ul>
