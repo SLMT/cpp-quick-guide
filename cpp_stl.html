@@ -182,35 +182,12 @@
 <li>Function Objects： 提供將 function 做為參數傳入 function 的方法，可以幫助客製化演算法的行為</li>
 <li>Adapters： 可以用來修改 STL 內其他元件行為的工具</li>
 </ul>
-<h2 id="algorithms"><a class="header" href="#algorithms">Algorithms</a></h2>
-<p>常用 algorithms：</p>
-<ul>
-<li>
-<p><code>sort(begin, end)</code> ： 使用 IntroSort 進行排序</p>
-<ul>
-<li>
-<p>IntroSort：預設使用 Quick Sort。如果發現 partition 差太多，改成用 Heap Sort。如果 Size 夠小，改成用 Insertion Sort。</p>
-</li>
-<li>
-<p>基本用法：</p>
-<pre><code class="language-cpp">int arr[] = {3, 5, 1, 2, 4};
-sort(arr, arr + 5);
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p><code>binary_search(begin, end, value)</code> ： 使用 binary search</p>
-</li>
-<li>
-<p><code>reverse(begin, end)</code> ： 反轉</p>
-</li>
-</ul>
 <h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
-<p>特殊 containers：</p>
+<p>STL container 清單： <a href="https://cplusplus.com/reference/stl/">https://cplusplus.com/reference/stl/</a></p>
+<p>需要注意的 containers：</p>
 <ul>
 <li>
-<p><code>forward_list</code> ： 只有向前指針的 linked list，比 <code>list</code> 使用更少的空間</p>
+<p><code>forward_list</code> ： 只有向前指針的 linked list，比 <code>list</code> (具備前後指針) 使用更少的空間</p>
 </li>
 <li>
 <p><code>priority_queue</code> ：  用 heap 實作的 queue，最大的東西會在最前面</p>
@@ -243,19 +220,19 @@ priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; gquiz(arr, arr 
 <p>使用自製的 comparator：</p>
 <pre><code class="language-cpp">class Foo { /* data */ };
 
-class Compare
+class Comparator
 {
 public:
     bool operator() (Foo, Foo)
     {
-		    // Is it smaller ?
+		// Should the first one be in front of the second one?
         return true;
     }
 };
 
 int main()
 {
-    std::priority_queue&lt;Foo, std::vector&lt;Foo&gt;, Compare&gt; pq;
+    std::priority_queue&lt;Foo, std::vector&lt;Foo&gt;, Comparator&gt; pq;
     return 0;
 }
 </code></pre>
@@ -263,10 +240,10 @@ int main()
 </ul>
 </li>
 <li>
-<p><code>set</code> ： sorted 的 set，用紅黑樹實作</p>
+<p><code>set</code> ： sorted set，用紅黑樹實作</p>
 </li>
 <li>
-<p><code>map</code> ： sorted 的 map，實作與 <code>set</code> 相同</p>
+<p><code>map</code> ： sorted map，實作與 <code>set</code> 相同</p>
 </li>
 <li>
 <p><code>multiset</code> ： 跟 <code>set</code> 一樣是 sorted set，但可以存重複資料</p>
@@ -276,13 +253,43 @@ int main()
 <ul>
 <li>注意用 <code>find(key)</code> 只會拿到一個 key-value pair，如果想要抓出所有重複 key 的 pair，要使用 <code>equal_range(key)</code>
 <ul>
-<li><code>equal_range(key)</code> 回傳的是一個 pair， <code>first</code> 是 iterator 的開頭（lower bound）， <code>second</code> 是 iterator 的結尾 (upper bound, exclusive)</li>
+<li><code>equal_range(key)</code> 回傳的是一個 pair， <code>first</code> 是 iterator 的開頭（lower bound, inclusive）， <code>second</code> 是 iterator 的結尾 (upper bound, exclusive)</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<h2 id="functors"><a class="header" href="#functors">Functors</a></h2>
+<h2 id="algorithms"><a class="header" href="#algorithms">Algorithms</a></h2>
+<p>常用 algorithms：</p>
+<ul>
+<li>
+<p><code>sort(begin, end)</code> ： 使用 IntroSort 進行排序</p>
+<ul>
+<li>
+<p>IntroSort：先嘗試使用 quick sort。 如果發現 partition 差太多，改成用 heap sort。 如果 size 夠小，改成用 insertion sort。</p>
+</li>
+<li>
+<p>基本用法：</p>
+<pre><code class="language-cpp">int arr[] = {3, 5, 1, 2, 4};
+sort(arr, arr + 5);
+
+vector&lt;int&gt; vec {3, 5, 1, 2, 4};
+sort(vec.begin(), vec.end());
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><code>binary_search(begin, end, value)</code> ： 使用 binary search</p>
+</li>
+<li>
+<p><code>reverse(begin, end)</code> ： 反轉順序</p>
+</li>
+</ul>
+<h2 id="iterator"><a class="header" href="#iterator">Iterator</a></h2>
+<p>可以看 C++ Reference 官網的介紹，簡單明瞭： <a href="https://cplusplus.com/reference/iterator/">https://cplusplus.com/reference/iterator/</a></p>
+<p>只要搞懂 Input, Output, Forward, Bidirectional, Random Access 這五種 iterator 的差異，跟他們的從屬關係就好。</p>
+<h2 id="function-objects-functors"><a class="header" href="#function-objects-functors">Function Objects (Functors)</a></h2>
 <p>直接看一例子，這個例子是寫一個 class 幫所有 array 所有的 element 加上想要的數字：</p>
 <pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 using namespace std;
@@ -315,10 +322,9 @@ int main()
 		cout &lt;&lt; arr[i] &lt;&lt; " ";
 }
 </code></pre>
-<p>主要是提供了 overload <code>()</code> 的能力，所以讓一個 object 可以被像 function 一樣呼叫。</p>
-<h2 id="iterator"><a class="header" href="#iterator">Iterator</a></h2>
-<p>可以看 C++ Reference 官網的介紹，簡單明瞭：https://cplusplus.com/reference/iterator/</p>
-<h2 id="pairs"><a class="header" href="#pairs">Pairs</a></h2>
+<p>主要是提供了改寫 <code>()</code> 行為的能力，所以讓一個 object 可以被像 function 一樣呼叫。</p>
+<h2 id="其他"><a class="header" href="#其他">其他</a></h2>
+<h3 id="pairs"><a class="header" href="#pairs">Pairs</a></h3>
 <p>C++ STL 提供了 pair 可以使用：</p>
 <pre><code class="language-cpp">// CPP program to illustrate Pair in STL
 #include &lt;iostream&gt;
@@ -345,7 +351,7 @@ int main()
 
 </code></pre>
 <ul>
-<li>Pair 可以比較，會先比第一個再比第二個</li>
+<li>Pair 可以被比較，會先比第一個再比第二個</li>
 </ul>
 
                     </main>
