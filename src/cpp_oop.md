@@ -1,6 +1,6 @@
-# C++ OOP
+# C++ 物件導向
 
-## Class Definition
+## Class 的宣告與定義
 
 基本例子：
 
@@ -47,17 +47,17 @@ int main() {
 
 ## Initialization List
 
-在 constructor 上可以加上特殊的 list 初始化 properties，如下：
+在 constructor 上可以加上特殊的 list 初始化 member data，如下：
 
 ```cpp
-C::C( double a, double b, double c): X(a), Y(b), Z(c) {
+C::C(double a, double b, double c): X(a), Y(b), Z(c) {
    ....
 }
 ```
 
 ## Copy Constructor
 
-C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製資料的能力，形式如下：
+C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製整個物件的能力，形式如下：
 
 ```cpp
 classname (const classname &obj) {
@@ -71,25 +71,27 @@ classname (const classname &obj) {
 
 Class 內可以定義 friend function 與 class 如下：
 
-```java
+```cpp
 class Box {
    double width;
    
    public:
       double length;
+
       friend void printWidth( Box box );
       void setWidth( double wid );
-			friend class ClassTwo;
+
+      friend class ClassTwo;
 };
 ```
 
-這樣寫代表外面的 `printWidth` 與 `ClassTwo` 就可以直接存取 Box 的變數 `width`
+這樣寫代表外面的 `printWidth` 與 `ClassTwo` 就可以直接存取 Box 的 private variable `width`
 
 ## Static Members
 
 C++ 的 class 可以定義 static member，但變數的初始化必須要寫在 class definition 外面：
 
-```java
+```cpp
 // foo.h
 class foo
 {
@@ -108,11 +110,10 @@ int foo::i = 0;
 與 Java 的關鍵差異：
 
 - 可以繼承多個 class
-    - 類似 Rust 的 trait implementation
+    - 這點比較像是 Java 的 interface
 - 繼承時可以設定 access modifier
     - 例如下面的例子將 base class 設定為 public
-        
-        ```java
+        ```cpp
         // Base class
         class Shape {
            // ...
@@ -131,11 +132,11 @@ int foo::i = 0;
 
 ## **Operators Overloading**
 
-C++ 的一大特色就是可以修改 operator 對 class 造成的效果 (Rust 也有)
+C++ 的一大特色就是可以修改 operator 對 class 造成的效果
 
-假設有一個 `Box` class，修改 `+` 的效果方式如下：
+假設有一個 `Box` class，希望將 `+` 的效果改成分別把長寬高相加，那要這樣修改：
 
-```java
+```cpp
 class Box {
    public:
       // ...
@@ -155,7 +156,7 @@ class Box {
 
 在 C++ 中，如果衍伸類別要改寫基底類別的 method，基底類別就必須要將 method 定義為 virtual：
 
-```java
+```cpp
 class Shape {
    protected:
       int width, height;
@@ -170,6 +171,7 @@ class Shape {
          return width * height;
       }
 };
+
 class Triangle: public Shape {
    public:
       Triangle( int a = 0, int b = 0):Shape(a, b) { }
@@ -187,7 +189,7 @@ class Triangle: public Shape {
 
 簡單的比較例子：
 
-```java
+```cpp
 class Base
 {
   public:
@@ -210,7 +212,7 @@ basePtr->Method1 ();  //  Prints "Base::Method1"
 basePtr->Method2 ();  //  Prints "Derived::Method2"
 ```
 
-來源：https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c
+參考資料： [https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c](https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c)
 
 ## Abstract Methods & Abstract Class
 
@@ -218,7 +220,7 @@ C++ 並沒有 `abstract` 關鍵字，但是可以用別的方式做到相同效�
 
 只要單純宣告但不定義 virtual function，並且加上 `= 0` ，就稱之為 pure virtual function：
 
-```java
+```cpp
 virtual int area() = 0;
 ```
 
@@ -228,7 +230,7 @@ virtual int area() = 0;
 
 ## Class vs. Struct
 
-C++ 的 class 與 struct 其實沒有太大的差別，只是在以下幾點：
+C++ 的 class 與 struct 其實沒有太大的差別，只是有幾個關鍵差異：
 
 - Class 的 member 預設是 private，struct 是 public
     - 繼承的時候也類似，class 預設會是 private 繼承
