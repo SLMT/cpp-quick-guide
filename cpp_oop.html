@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>C++ OOP - 小山的 C++ 快速上手筆記</title>
+        <title>C++ 物件導向 - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html" class="active"><strong aria-hidden="true">3.</strong> C++ OOP</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html" class="active"><strong aria-hidden="true">3.</strong> C++ 物件導向</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,8 +173,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="c-oop"><a class="header" href="#c-oop">C++ OOP</a></h1>
-<h2 id="class-definition"><a class="header" href="#class-definition">Class Definition</a></h2>
+                        <h1 id="c-物件導向"><a class="header" href="#c-物件導向">C++ 物件導向</a></h1>
+<h2 id="class-的宣告與定義"><a class="header" href="#class-的宣告與定義">Class 的宣告與定義</a></h2>
 <p>基本例子：</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
  
@@ -216,13 +216,13 @@ int main() {
 }
 </code></pre>
 <h2 id="initialization-list"><a class="header" href="#initialization-list">Initialization List</a></h2>
-<p>在 constructor 上可以加上特殊的 list 初始化 properties，如下：</p>
-<pre><code class="language-cpp">C::C( double a, double b, double c): X(a), Y(b), Z(c) {
+<p>在 constructor 上可以加上特殊的 list 初始化 member data，如下：</p>
+<pre><code class="language-cpp">C::C(double a, double b, double c): X(a), Y(b), Z(c) {
    ....
 }
 </code></pre>
 <h2 id="copy-constructor"><a class="header" href="#copy-constructor">Copy Constructor</a></h2>
-<p>C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製資料的能力，形式如下：</p>
+<p>C++ 規定每一個 class 都要有一個 copy constructor 具備可以複製整個物件的能力，形式如下：</p>
 <pre><code class="language-cpp">classname (const classname &amp;obj) {
    // body of constructor
 }
@@ -230,20 +230,22 @@ int main() {
 <p>如果沒有的話 C++ 會自動創建一個預設的，做法是會呼叫所有 member variable 的 copy constructor 實現 deep copy。</p>
 <h2 id="friend-functions--classes"><a class="header" href="#friend-functions--classes">Friend Functions &amp; Classes</a></h2>
 <p>Class 內可以定義 friend function 與 class 如下：</p>
-<pre><code class="language-java">class Box {
+<pre><code class="language-cpp">class Box {
    double width;
    
    public:
       double length;
+
       friend void printWidth( Box box );
       void setWidth( double wid );
-			friend class ClassTwo;
+
+      friend class ClassTwo;
 };
 </code></pre>
-<p>這樣寫代表外面的 <code>printWidth</code> 與 <code>ClassTwo</code> 就可以直接存取 Box 的變數 <code>width</code></p>
+<p>這樣寫代表外面的 <code>printWidth</code> 與 <code>ClassTwo</code> 就可以直接存取 Box 的 private variable <code>width</code></p>
 <h2 id="static-members"><a class="header" href="#static-members">Static Members</a></h2>
 <p>C++ 的 class 可以定義 static member，但變數的初始化必須要寫在 class definition 外面：</p>
-<pre><code class="language-java">// foo.h
+<pre><code class="language-cpp">// foo.h
 class foo
 {
     private:
@@ -259,14 +261,14 @@ int foo::i = 0;
 <ul>
 <li>可以繼承多個 class
 <ul>
-<li>類似 Rust 的 trait implementation</li>
+<li>這點比較像是 Java 的 interface</li>
 </ul>
 </li>
 <li>繼承時可以設定 access modifier
 <ul>
 <li>
 <p>例如下面的例子將 base class 設定為 public</p>
-<pre><code class="language-java">// Base class
+<pre><code class="language-cpp">// Base class
 class Shape {
    // ...
 };
@@ -289,9 +291,9 @@ class Rectangle: public Shape {
 </li>
 </ul>
 <h2 id="operators-overloading"><a class="header" href="#operators-overloading"><strong>Operators Overloading</strong></a></h2>
-<p>C++ 的一大特色就是可以修改 operator 對 class 造成的效果 (Rust 也有)</p>
-<p>假設有一個 <code>Box</code> class，修改 <code>+</code> 的效果方式如下：</p>
-<pre><code class="language-java">class Box {
+<p>C++ 的一大特色就是可以修改 operator 對 class 造成的效果</p>
+<p>假設有一個 <code>Box</code> class，希望將 <code>+</code> 的效果改成分別把長寬高相加，那要這樣修改：</p>
+<pre><code class="language-cpp">class Box {
    public:
       // ...
       
@@ -307,7 +309,7 @@ class Rectangle: public Shape {
 </code></pre>
 <h2 id="function-override--virtual-functions"><a class="header" href="#function-override--virtual-functions">Function Override &amp; Virtual Functions</a></h2>
 <p>在 C++ 中，如果衍伸類別要改寫基底類別的 method，基底類別就必須要將 method 定義為 virtual：</p>
-<pre><code class="language-java">class Shape {
+<pre><code class="language-cpp">class Shape {
    protected:
       int width, height;
 
@@ -321,6 +323,7 @@ class Rectangle: public Shape {
          return width * height;
       }
 };
+
 class Triangle: public Shape {
    public:
       Triangle( int a = 0, int b = 0):Shape(a, b) { }
@@ -334,7 +337,7 @@ class Triangle: public Shape {
 <p>這是因為 C++ 在 class 建立時，預設會用 static linkage 綁定 function 的定義，而這個會導致當一個 function 被呼叫時，「只會根據其 variable type 來判斷該呼叫哪一個 function」。也就是說，無論實際上物件是 <code>Shape</code> 還是 <code>Triangle</code> ，只要他是 <code>Shape</code> 的變數，就會呼叫到 <code>Shape</code> 的 <code>area()</code> 。</p>
 <p>如果將 function 設定為 virtual，C++ 就會知道該將 function 改用 dynamic linkage 處理，他會根據當下 object 的實際類別來判斷該呼叫哪一個 function (使用 vtable)。</p>
 <p>簡單的比較例子：</p>
-<pre><code class="language-java">class Base
+<pre><code class="language-cpp">class Base
 {
   public:
             void Method1 ()  {  std::cout &lt;&lt; "Base::Method1" &lt;&lt; std::endl;  }
@@ -355,16 +358,16 @@ Base* basePtr = new Derived ();
 basePtr-&gt;Method1 ();  //  Prints "Base::Method1"
 basePtr-&gt;Method2 ();  //  Prints "Derived::Method2"
 </code></pre>
-<p>來源：https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c</p>
+<p>參考資料： <a href="https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c">https://stackoverflow.com/questions/2391679/why-do-we-need-virtual-functions-in-c</a></p>
 <h2 id="abstract-methods--abstract-class"><a class="header" href="#abstract-methods--abstract-class">Abstract Methods &amp; Abstract Class</a></h2>
 <p>C++ 並沒有 <code>abstract</code> 關鍵字，但是可以用別的方式做到相同效果。</p>
 <p>只要單純宣告但不定義 virtual function，並且加上 <code>= 0</code> ，就稱之為 pure virtual function：</p>
-<pre><code class="language-java">virtual int area() = 0;
+<pre><code class="language-cpp">virtual int area() = 0;
 </code></pre>
 <p>這等同於 Java 的 abstract method。</p>
 <p>只要 class 中包含至少一個 pure virtual function，那麼該 class 就不能被實體化，因此效果等同於 abstract class。</p>
 <h2 id="class-vs-struct"><a class="header" href="#class-vs-struct">Class vs. Struct</a></h2>
-<p>C++ 的 class 與 struct 其實沒有太大的差別，只是在以下幾點：</p>
+<p>C++ 的 class 與 struct 其實沒有太大的差別，只是有幾個關鍵差異：</p>
 <ul>
 <li>Class 的 member 預設是 private，struct 是 public
 <ul>
