@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>C++ Advanced - 小山的 C++ 快速上手筆記</title>
+        <title>C++ 進階語法 - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ 物件導向</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html" class="active"><strong aria-hidden="true">4.</strong> C++ Advanced</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ 物件導向</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html" class="active"><strong aria-hidden="true">4.</strong> C++ 進階語法</a></li><li class="chapter-item expanded "><a href="modern_cpp.html"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,9 +173,9 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="c-advanced"><a class="header" href="#c-advanced">C++ Advanced</a></h1>
+                        <h1 id="c-進階語法"><a class="header" href="#c-進階語法">C++ 進階語法</a></h1>
 <h2 id="try-catch"><a class="header" href="#try-catch">Try-Catch</a></h2>
-<p>C++ 也可以 throw exception，並且用 try-catch 抓住。與 Java 最大的不同在於 C++ 的 throw 可以丟出任何種類的資料，catch 只要寫清楚資料的型別就好：</p>
+<p>C++ 可以 throw exception，而且可以用 try-catch 抓住。與 Java 最大的不同在於 C++ 的 throw 可以丟出任何種類的資料，catch 只要寫清楚資料的型別就好：</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 using namespace std;
 
@@ -201,19 +201,19 @@ int main () {
    return 0;
 }
 </code></pre>
-<p>C++ STD 有內建一系列的 Exception，可以在下面網頁看到清單：</p>
-<p>https://cplusplus.com/reference/exception/exception/?kw=exception</p>
-<p>同時開發者也鼓勵繼承 <code>exception</code> 來製造自己的錯誤，其中只需要 override <code>what()</code> (顯示錯誤資訊的 function) 就好。</p>
+<p>C++ STD 有內建一系列的 exception，可以在下面網頁看到清單：</p>
+<p><a href="https://cplusplus.com/reference/exception/exception/?kw=exception">https://cplusplus.com/reference/exception/exception/?kw=exception</a></p>
+<p>另外官方也鼓勵開發者繼承 <code>exception</code> class 來製造自己的錯誤種類，其中只需要 override <code>what()</code> (顯示錯誤資訊的 function) 就好。</p>
 <h2 id="template"><a class="header" href="#template">Template</a></h2>
-<p>template 就是 Jave 的 generic，只是語法稍微不同，功能也沒那麼強而已。</p>
-<p>定義 function 的 template 範例如下：</p>
+<p>Template 就是 Jave 的 generic，只是語法稍微不同，功能也沒那麼強而已。</p>
+<p>定義 function template 的範例如下：</p>
 <pre><code class="language-cpp">template &lt;typename T&gt;
 T minimum(const T&amp; lhs, const T&amp; rhs)
 {
     return lhs &lt; rhs ? lhs : rhs;
 }
 </code></pre>
-<p>定義 class 的 template 範例如下：</p>
+<p>定義 class template 的範例如下：</p>
 <pre><code class="language-cpp">template &lt;class T&gt;
 class Stack { 
    private: 
@@ -235,8 +235,8 @@ void Stack&lt;T&gt;::push (T const&amp; elem) {
    elems.push_back(elem);    
 } 
 </code></pre>
-<p>注意在外面定義 class method 時也要額外的 <code>template &lt;class T&gt;</code> 標籤。</p>
-<p>MSFT 官網有更加詳盡的介紹：https://learn.microsoft.com/zh-tw/cpp/cpp/templates-cpp?view=msvc-170</p>
+<p>注意當 class method 的定義沒有寫在 class 的宣告內時，也要額外宣告 <code>template &lt;class T&gt;</code> 的標籤。</p>
+<p>MSFT 官網有針對 template 更加詳盡的介紹： <a href="https://learn.microsoft.com/zh-tw/cpp/cpp/templates-cpp?view=msvc-170">https://learn.microsoft.com/zh-tw/cpp/cpp/templates-cpp?view=msvc-170</a></p>
 
                     </main>
 
