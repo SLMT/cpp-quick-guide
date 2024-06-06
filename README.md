@@ -1,4 +1,4 @@
-# 小山的 C++ 快速上手筆記
+# 小山的 C++ 快速上手筆記（校對中）
 
 [![Deploy](https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml/badge.svg)](https://github.com/SLMT/cpp-quick-start/actions/workflows/deploy.yml)
 
@@ -21,4 +21,4 @@
 - TutorialsPoint C++： [https://www.tutorialspoint.com/cplusplus/index.htm](https://www.tutorialspoint.com/cplusplus/index.htm)
 - Microsoft Learn - C++ 文件： [https://learn.microsoft.com/zh-tw/cpp/cpp/?view=msvc-170](https://learn.microsoft.com/zh-tw/cpp/cpp/?view=msvc-170)
 - GeeksforGeeks - The C++ Standard Template Library (STL)： [https://www.geeksforgeeks.org/the-c-standard-template-library-stl/](https://www.geeksforgeeks.org/the-c-standard-template-library-stl/)
-- 现代 C++ 教程：高速上手 C++ 11/14/17/20： [https://changkun.de/modern-cpp/](https://changkun.de/modern-cpp/)
+- Modern C++ Tutorial: C++ 11/14/17/20 On the Fly： [https://changkun.de/modern-cpp/en-us/00-preface/](https://changkun.de/modern-cpp/en-us/00-preface/)
