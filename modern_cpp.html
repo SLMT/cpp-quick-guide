@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Modern C++ (After C++11) - 小山的 C++ 快速上手筆記</title>
+        <title>Modern C++ (C++11 之後的變化) - 小山的 C++ 快速上手筆記</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ 物件導向</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ 進階語法</a></li><li class="chapter-item expanded "><a href="modern_cpp.html" class="active"><strong aria-hidden="true">5.</strong> Modern C++ (After C++11)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">簡介</a></li><li class="chapter-item expanded "><a href="cpp_basics.html"><strong aria-hidden="true">1.</strong> C++ 基礎知識加強</a></li><li class="chapter-item expanded "><a href="cpp_stl.html"><strong aria-hidden="true">2.</strong> C++ STL</a></li><li class="chapter-item expanded "><a href="cpp_oop.html"><strong aria-hidden="true">3.</strong> C++ 物件導向</a></li><li class="chapter-item expanded "><a href="cpp_advanced.html"><strong aria-hidden="true">4.</strong> C++ 進階語法</a></li><li class="chapter-item expanded "><a href="modern_cpp.html" class="active"><strong aria-hidden="true">5.</strong> Modern C++ (C++11 之後的變化)</a></li><li class="chapter-item expanded "><a href="cpp_concurrency.html"><strong aria-hidden="true">6.</strong> C++ Concurrency</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,11 +173,11 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="modern-c-after-c11"><a class="header" href="#modern-c-after-c11">Modern C++ (After C++11)</a></h1>
+                        <h1 id="modern-c-c11-之後的變化"><a class="header" href="#modern-c-c11-之後的變化">Modern C++ (C++11 之後的變化)</a></h1>
 <h2 id="棄用語法"><a class="header" href="#棄用語法">棄用語法</a></h2>
 <ul>
-<li>字串 litertral 應該改用 <code>const char *</code> 而不是 <code>char *</code> 宣告</li>
-<li><code>register</code> 效用被移除</li>
+<li>字串 literal 應該改用 <code>const char *</code> 型別而不是 <code>char *</code> 型別宣告</li>
+<li><code>register</code> 的效果被移除（不再具有將變數放入 CPU register 的效果）</li>
 <li><code>bool</code> 不可以 <code>++</code></li>
 <li>C 語言風格的轉換方式 <code>(type)</code> 被棄用，應該改用 <code>static_cast</code>、<code>reinterpret_cast</code>、<code>const_cast</code> 等方式轉換</li>
 </ul>
@@ -185,13 +185,13 @@
 <p>C++11：</p>
 <ul>
 <li>
-<p>指定 Null Pointer 時改用 <code>nullptr</code> 而不是 <code>NULL</code></p>
+<p>指定 Null Pointer 應改用 <code>nullptr</code> 而不是 <code>NULL</code></p>
 <ul>
-<li><code>NULL</code> 可能會被解析成 int 造成額外問題，<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#nullptr">例子</a></li>
+<li><code>NULL</code> 可能會被解析成 <code>int</code> 造成額外問題，例如有兩個 function 分別為 <code>foo(int a)</code> 與 <code>foo(char* b)</code>，當我們呼叫 <code>foo(NULL)</code> 就不見得會呼叫 <code>foo(char* b)</code> 那個。</li>
 </ul>
 </li>
 <li>
-<p>加入 <code>constexpr</code> 支援，用來表示某一個 expression 或 function 輸出的結果是一個常數</p>
+<p>加入 <code>constexpr</code>：用來表示某一個 expression 或 function 輸出的結果是一個常數</p>
 <ul>
 <li>
 <p>編譯器會去驗證這點，並且可以以此來優化程式碼</p>
@@ -208,12 +208,39 @@
 </ul>
 </li>
 <li>
-<p>提供可以使用 initialization list 初始化任意物件的能力（但需要實作對應的 constructor），<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8">範例</a></p>
+<p>提供可以使用 initialization list 初始化任意物件的能力（但需要實作對應的 constructor）</p>
+<ul>
+<li>範例：
+<pre><code class="language-cpp">#include &lt;initializer_list&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+class MagicFoo {
+public:
+    std::vector&lt;int&gt; vec;
+    MagicFoo(std::initializer_list&lt;int&gt; list) {
+        for (std::initializer_list&lt;int&gt;::iterator it = list.begin();
+            it != list.end(); ++it)
+            vec.push_back(*it);
+    }
+};
+int main() {
+    // after C++11
+    MagicFoo magicFoo = {1, 2, 3, 4, 5};
+
+    std::cout &lt;&lt; "magicFoo: ";
+    for (std::vector&lt;int&gt;::iterator it = magicFoo.vec.begin(); 
+        it != magicFoo.vec.end(); ++it) 
+        std::cout &lt;&lt; *it &lt;&lt; std::endl;
+}
+</code></pre>
+</li>
+</ul>
 </li>
 <li>
-<p><code>auto</code> ：自動型別推導</p>
-<pre><code class="language-cpp">auto i = 5;              // i 被推导为 int
-auto arr = new auto(10); // arr 被推导为 int *
+<p>加入 <code>auto</code> ：自動型別推導</p>
+<pre><code class="language-cpp">auto i = 5;              // i is inferred as int
+auto arr = new auto(10); // arr is inferred as int *
 </code></pre>
 <ul>
 <li>
@@ -234,7 +261,7 @@ auto add(T x, U y){
 </ul>
 </li>
 <li>
-<p><code>decltype</code> ： 輸出變數是何種型別</p>
+<p>加入 <code>decltype</code> ： 輸出變數是何種型別</p>
 <ul>
 <li>
 <p>通常搭配 <code>std::is_same&lt;T, U&gt;</code> 使用，檢查是否兩個型別是同一個型別</p>
@@ -255,17 +282,17 @@ for (auto &amp;element : vec) {
 }
 </code></pre>
 <ul>
-<li>宣告 ranged for loop 的原則：
+<li>宣告 ranged for loop 變數的原則：
 <ul>
-<li>Choose <code>auto x</code> when you want to work with copies.</li>
-<li>Choose <code>auto &amp;x</code> when you want to work with original items and may modify them.</li>
-<li>Choose <code>auto const &amp;x</code> when you want to work with original items and will not modify them.</li>
+<li>想 copy 數值 =&gt; 使用 <code>auto x</code></li>
+<li>想直接引用原本的物件，並且可能會修改 =&gt; 使用 <code>auto &amp;x</code></li>
+<li>想直接引用原本的物件，但不會修改 =&gt; 使用 <code>auto const &amp;x</code></li>
 </ul>
 </li>
 </ul>
 </li>
 <li>
-<p>template 別名：</p>
+<p>搭配 <code>template</code> 使用別名：</p>
 <pre><code class="language-cpp">template&lt;typename T, typename U&gt;
 class MagicType {
 public:
@@ -292,9 +319,6 @@ magic(); // Print: 0
 magic(1); // Print: 1
 magic(1, ""); // Print: 2
 </code></pre>
-<ul>
-<li>關於如何處理請見<a href="https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E6%A8%A1%E6%9D%BF">範例</a></li>
-</ul>
 </li>
 <li>
 <p>Delegate constructor：允許重複使用同一個 class 內的 constructor</p>
@@ -320,7 +344,7 @@ public:
 </code></pre>
 </li>
 <li>
-<p><code>override</code> : 避免複寫不存在的 virtual function</p>
+<p>加入 <code>override</code> : 強制檢查是否複寫不存在的 virtual function</p>
 <pre><code class="language-cpp">struct Base {
     virtual void foo(int);
 };
@@ -331,7 +355,7 @@ struct SubClass: Base {
 </code></pre>
 </li>
 <li>
-<p><code>final</code> : 阻止繼承或 override</p>
+<p>加入 <code>final</code> : 阻止繼承或 override</p>
 <pre><code class="language-cpp">struct Base {
     virtual void foo() final;
 };
@@ -447,12 +471,14 @@ std::cout &lt;&lt; add(i, j) &lt;&lt; std::endl;
 </li>
 </ul>
 <h2 id="lambda-function"><a class="header" href="#lambda-function">Lambda Function</a></h2>
-<p>類似 Java 的匿名函數，語法如下：</p>
+<p>Lambda function 指的是為了當下某個特定目的建立的匿名 function，作用通常不是為了減少重複程式碼，而是為了將某種程序做為參數傳遞出去。</p>
+<p>語法：</p>
 <pre><code>[capture list] (parameter list) mutable(optional) exception attribute -&gt; return type {
 // function body
 }
 </code></pre>
 <p>其中 <code>[capture list]</code> 代表從 lambda function 外部帶入的變數，注意該變數是在建立 lambda function 的當下就會複製，而不是在呼叫時被複製。</p>
+<p>下面是一個 lambda function 的範例，注意建立 lambda function 的當下 <code>value</code> 的數值被 function 給捕獲並且複製一份。 因此就算後續 <code>value</code> 被改成 <code>100</code> 也不會造成影響。</p>
 <pre><code class="language-cpp">void lambda_value_capture() {
     int value = 1;
     auto copy_value = [value] {
@@ -493,7 +519,7 @@ void lambda_expression_capture() {
 add(1, 2);
 add(1.1, 2.2);
 </code></pre>
-<p>C++11 使用 <code>std::function</code> 統一了所有可呼叫的型別：</p>
+<p>C++11 加入 <code>std::function</code>，正式明確定義 function 為一種型別：</p>
 <pre><code class="language-cpp">#include &lt;functional&gt;
 #include &lt;iostream&gt;
 
@@ -513,7 +539,7 @@ int main() {
     std::cout &lt;&lt; func2(10) &lt;&lt; std::endl;
 }
 </code></pre>
-<p>另外也加入了 <code>std::bind</code> 與 <code>std::placeholder</code> 來預先將數值綁定在某些參數上：</p>
+<p>另外也加入了 <code>std::bind</code> 與 <code>std::placeholder</code>，用以延後傳遞參數的時機：</p>
 <pre><code class="language-cpp">int foo(int a, int b, int c) {
     ;
 }
@@ -526,10 +552,9 @@ int main() {
 }
 </code></pre>
 <h2 id="stdmove"><a class="header" href="#stdmove"><code>std::move</code></a></h2>
-<p>C++11 加入了右值參考 <code>T &amp;&amp;</code> 的概念，用途是可以將一個即將被銷毀的數值轉移到另一個物件內。</p>
+<p>C++11 加入了右值參考 <code>T &amp;&amp;</code> 的概念，用途是可以將一個即將被銷毀的數值轉移到另一個變數。</p>
 <p><code>std::move</code> 提供了將一個左值轉換為右值參考的能力，一旦在 expression 中的右側出現了右值參考，C++ 便不會呼叫 copy constructor，而是改呼叫 move constructor (編譯器預設會實作一個)。</p>
-<p>這個新的作法主要是盡可能地只複製 pointer，而不是整份資料，並同時將舊物件內的 pointer 清除（改成 <code>nullptr</code> ）。</p>
-<p><code>std::move</code> 最常見的用途就是用來避免大量的資料複製。</p>
+<p>Move constructor 的概念是盡可能地只複製 pointer，而不是整份資料，並同時將舊物件內的 pointer 清除（改成 <code>nullptr</code> ），以避免大量資料被複製的行為發生，這也是 <code>std::move</code> 最常見的用途。</p>
 <p>考慮以下例子：</p>
 <pre><code class="language-cpp">template &lt;class T&gt;
 swap(T&amp; a, T&amp; b) {
@@ -538,7 +563,8 @@ swap(T&amp; a, T&amp; b) {
     b = tmp;    // we've made a second copy of tmp (and discarded a copy of b)
 }
 </code></pre>
-<p>使用 <code>std::move</code> 改寫：</p>
+<p>在這個例子中，發生了三次資料複製。</p>
+<p>我們可以使用 <code>std::move</code> 改寫來避免複製資料：</p>
 <pre><code class="language-cpp">template &lt;class T&gt;
 swap(T&amp; a, T&amp; b) {
     T tmp(std::move(a));
@@ -547,8 +573,8 @@ swap(T&amp; a, T&amp; b) {
 }
 </code></pre>
 <p>如果 <code>T</code> 是一個資料結構，例如 <code>vector&lt;int&gt;</code> ，那裡面可能就包含大量資料，用第一版就會浪費大量的資源與時間。</p>
-<p>Default move constructor 基本上跟 copy constructor 差不多，只是他不會複製指標指向的資料，而是單純將指標複製一份。同時也會修改原本 class 的 member，把資料都留空。</p>
-<h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
+<p>如同 copy constructor，預設 compiler 會幫每一個型別實作一個 move constructor，作法基本上跟 copy constructor 差不多。只差在他不會複製指標指向的資料，而是單純將指標複製一份（做 shallow copy 而非 deep copy）。同時也會修改原本 class 的 member，把所有變數都清空（避免跟 moved 後的物件使用到相同的記憶體空間）。</p>
+<h2 id="新增的-containers"><a class="header" href="#新增的-containers">新增的 Containers</a></h2>
 <ul>
 <li>
 <p><code>std::array</code></p>
@@ -650,9 +676,12 @@ int main()
 </li>
 </ul>
 <h2 id="smart-pointers"><a class="header" href="#smart-pointers">Smart Pointers</a></h2>
+<p>Smart pointer 的加入大幅改進了 C++ 管理記憶體的彈性。以往 C++ 開發者如果沒有正確使用 pointer，則可能會造成該 pointer 指向非法空間 (segmentation fault) 或者 memory leak 等常見問題。如果 C++ 開發者使用 smart pointer，C++ 就能夠自動進行記憶體管理，並在適當的時機釋放該釋放的記憶體。</p>
 <ul>
 <li>
-<p><code>std::shared_ptr</code> : 自動計數並銷毀的 pointer</p>
+<p><code>std::shared_ptr</code> : 使用計數器管理記憶體的 pointer。</p>
+<ul>
+<li>原理：每次複製 pointer 時都會造成內部的計數器加一，pointer 被銷毀時計數器減一，當計數器歸零時（即所有的 pointer 都被銷毀時），就會自動釋放背後物件的記憶體空間。
 <pre><code class="language-cpp">auto pointer = std::make_shared&lt;int&gt;(10);
 auto pointer2 = pointer; // reference count+1
 auto pointer3 = pointer; // reference count+1
@@ -671,8 +700,13 @@ std::cout &lt;&lt; "pointer2.use_count() = "
 std::cout &lt;&lt; "pointer3.use_count() = " &lt;&lt; pointer3.use_count() &lt;&lt; std::endl; // 2
 </code></pre>
 </li>
+</ul>
+</li>
 <li>
-<p><code>std::unique_ptr</code> : 只允許一個變數的 pointer</p>
+<p><code>std::unique_ptr</code> : 不能被複製只能 move 的 pointer。</p>
+<ul>
+<li>
+<p>原理：當每次進行 pointer assignment 的行為時，被限定只能用 move 而不能複製的 pointer。舊的 pointer 在 move 完後會當即失效，無法繼續使用。而當這個唯一的 pointer 被銷毀時，背後物件的記憶體也會跟著被釋放。</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt; // std::cout
 #include &lt;memory&gt;
 
@@ -686,12 +720,17 @@ int main()
 }
 </code></pre>
 </li>
+</ul>
+</li>
 <li>
-<p><code>std::weak_ptr</code> : 弱指針，不會引起 <code>shared_ptr</code> 計數增加</p>
+<p><code>std::weak_ptr</code> : 弱指針，針對 <code>shared_ptr</code> 設計，建立時不會引起計數器加一。</p>
 <ul>
 <li>
-<p>主要是用來避免下圖的 cycle share 問題：</p>
-<p><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/90130fb6-82ad-49ff-9656-f23eef83d45d/bc344694-84cb-4491-96f3-8d1d26059d53/Untitled.png" alt="Untitled" /></p>
+<p><code>shared_ptr</code> 有個常見的問題是，如果有兩個 <code>shared_ptr</code> 互相指向對方，那麼就會造成計數器永遠不會變成 0：</p>
+<p><img src="weak-pointer.png" alt="Cycle Share" /></p>
+<ul>
+<li>因此這時通常會讓其中一個 pointer 改成用 <code>weak_ptr</code>，這樣就 <code>shared_ptr</code> 就可以正常歸零。</li>
+</ul>
 </li>
 <li>
 <p>用法：直接 assign <code>shared_ptr</code> 給 <code>weak_ptr</code> 即可</p>
@@ -701,10 +740,6 @@ std::weak_ptr&lt;int&gt; b = a;
 </li>
 </ul>
 </li>
-</ul>
-<h2 id="沒搞懂的東西"><a class="header" href="#沒搞懂的東西">沒搞懂的東西</a></h2>
-<ul>
-<li><code>decltype(auto)</code></li>
 </ul>
 
                     </main>
