@@ -1,9 +1,9 @@
-# Modern C++ (After C++11)
+# Modern C++ (C++11 之後的變化)
 
 ## 棄用語法
 
-- 字串 litertral 應該改用 `const char *` 而不是 `char *` 宣告
-- `register` 效用被移除
+- 字串 literal 應該改用 `const char *` 型別而不是 `char *` 型別宣告
+- `register` 的效果被移除（不再具有將變數放入 CPU register 的效果）
 - `bool` 不可以 `++`
 - C 語言風格的轉換方式 `(type)` 被棄用，應該改用 `static_cast`、`reinterpret_cast`、`const_cast` 等方式轉換
 
@@ -11,9 +11,9 @@
 
 C++11：
 
-- 指定 Null Pointer 時改用 `nullptr` 而不是 `NULL`
-    - `NULL` 可能會被解析成 int 造成額外問題，[例子](https://changkun.de/modern-cpp/zh-cn/02-usability/#nullptr)
-- 加入 `constexpr` 支援，用來表示某一個 expression 或 function 輸出的結果是一個常數
+- 指定 Null Pointer 應改用 `nullptr` 而不是 `NULL`
+    - `NULL` 可能會被解析成 `int` 造成額外問題，例如有兩個 function 分別為 `foo(int a)` 與 `foo(char* b)`，當我們呼叫 `foo(NULL)` 就不見得會呼叫 `foo(char* b)` 那個。
+- 加入 `constexpr`：用來表示某一個 expression 或 function 輸出的結果是一個常數
     - 編譯器會去驗證這點，並且可以以此來優化程式碼
     - 範例：
         
@@ -27,12 +27,37 @@ C++11：
         constexpr int var_constexpr = 1 + 2 + 3;
         ```
         
-- 提供可以使用 initialization list 初始化任意物件的能力（但需要實作對應的 constructor），[範例](https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8)
-- `auto` ：自動型別推導
+- 提供可以使用 initialization list 初始化任意物件的能力（但需要實作對應的 constructor）
+  - 範例：
+    ```cpp
+    #include <initializer_list>
+    #include <vector>
+    #include <iostream>
+
+    class MagicFoo {
+    public:
+        std::vector<int> vec;
+        MagicFoo(std::initializer_list<int> list) {
+            for (std::initializer_list<int>::iterator it = list.begin();
+                it != list.end(); ++it)
+                vec.push_back(*it);
+        }
+    };
+    int main() {
+        // after C++11
+        MagicFoo magicFoo = {1, 2, 3, 4, 5};
+
+        std::cout << "magicFoo: ";
+        for (std::vector<int>::iterator it = magicFoo.vec.begin(); 
+            it != magicFoo.vec.end(); ++it) 
+            std::cout << *it << std::endl;
+    }
+    ```
+- 加入 `auto` ：自動型別推導
     
     ```cpp
-    auto i = 5;              // i 被推导为 int
-    auto arr = new auto(10); // arr 被推导为 int *
+    auto i = 5;              // i is inferred as int
+    auto arr = new auto(10); // arr is inferred as int *
     ```
     
     - `auto` 也常用於 template 指定 function return type 時，這樣就不需要額外定義另一個 type 變數：
@@ -51,7 +76,7 @@ C++11：
         }
         ```
         
-- `decltype` ： 輸出變數是何種型別
+- 加入 `decltype` ： 輸出變數是何種型別
     - 通常搭配 `std::is_same<T, U>` 使用，檢查是否兩個型別是同一個型別
         
         ```cpp
@@ -71,11 +96,11 @@ C++11：
     }
     ```
     
-    - 宣告 ranged for loop 的原則：
-        - Choose `auto x` when you want to work with copies.
-        - Choose `auto &x` when you want to work with original items and may modify them.
-        - Choose `auto const &x` when you want to work with original items and will not modify them.
-- template 別名：
+    - 宣告 ranged for loop 變數的原則：
+        - 想 copy 數值 => 使用 `auto x`
+        - 想直接引用原本的物件，並且可能會修改 => 使用 `auto &x`
+        - 想直接引用原本的物件，但不會修改 => 使用 `auto const &x`
+- 搭配 `template` 使用別名：
     
     ```cpp
     template<typename T, typename U>
@@ -105,8 +130,6 @@ C++11：
     magic(1); // Print: 1
     magic(1, ""); // Print: 2
     ```
-    
-    - 關於如何處理請見[範例](https://changkun.de/modern-cpp/zh-cn/02-usability/#%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E6%A8%A1%E6%9D%BF)
 - Delegate constructor：允許重複使用同一個 class 內的 constructor
     
     ```cpp
@@ -132,7 +155,7 @@ C++11：
     };
     ```
     
-- `override` : 避免複寫不存在的 virtual function
+- 加入 `override` : 強制檢查是否複寫不存在的 virtual function
     
     ```cpp
     struct Base {
@@ -144,7 +167,7 @@ C++11：
     };
     ```
     
-- `final` : 阻止繼承或 override
+- 加入 `final` : 阻止繼承或 override
     
     ```cpp
     struct Base {
@@ -265,7 +288,9 @@ C++20：
 
 ## Lambda Function
 
-類似 Java 的匿名函數，語法如下：
+Lambda function 指的是為了當下某個特定目的建立的匿名 function，作用通常不是為了減少重複程式碼，而是為了將某種程序做為參數傳遞出去。
+
+語法：
 
 ```
 [capture list] (parameter list) mutable(optional) exception attribute -> return type {
@@ -274,6 +299,8 @@ C++20：
 ```
 
 其中 `[capture list]` 代表從 lambda function 外部帶入的變數，注意該變數是在建立 lambda function 的當下就會複製，而不是在呼叫時被複製。
+
+下面是一個 lambda function 的範例，注意建立 lambda function 的當下 `value` 的數值被 function 給捕獲並且複製一份。 因此就算後續 `value` 被改成 `100` 也不會造成影響。
 
 ```cpp
 void lambda_value_capture() {
@@ -323,7 +350,7 @@ add(1, 2);
 add(1.1, 2.2);
 ```
 
-C++11 使用 `std::function` 統一了所有可呼叫的型別：
+C++11 加入 `std::function`，正式明確定義 function 為一種型別：
 
 ```cpp
 #include <functional>
@@ -346,7 +373,7 @@ int main() {
 }
 ```
 
-另外也加入了 `std::bind` 與 `std::placeholder` 來預先將數值綁定在某些參數上：
+另外也加入了 `std::bind` 與 `std::placeholder`，用以延後傳遞參數的時機：
 
 ```cpp
 int foo(int a, int b, int c) {
@@ -363,13 +390,11 @@ int main() {
 
 ## `std::move`
 
-C++11 加入了右值參考 `T &&` 的概念，用途是可以將一個即將被銷毀的數值轉移到另一個物件內。
+C++11 加入了右值參考 `T &&` 的概念，用途是可以將一個即將被銷毀的數值轉移到另一個變數。
 
 `std::move` 提供了將一個左值轉換為右值參考的能力，一旦在 expression 中的右側出現了右值參考，C++ 便不會呼叫 copy constructor，而是改呼叫 move constructor (編譯器預設會實作一個)。
 
-這個新的作法主要是盡可能地只複製 pointer，而不是整份資料，並同時將舊物件內的 pointer 清除（改成 `nullptr` ）。
-
-`std::move` 最常見的用途就是用來避免大量的資料複製。
+Move constructor 的概念是盡可能地只複製 pointer，而不是整份資料，並同時將舊物件內的 pointer 清除（改成 `nullptr` ），以避免大量資料被複製的行為發生，這也是 `std::move` 最常見的用途。
 
 考慮以下例子：
 
@@ -382,7 +407,9 @@ swap(T& a, T& b) {
 }
 ```
 
-使用 `std::move` 改寫：
+在這個例子中，發生了三次資料複製。
+
+我們可以使用 `std::move` 改寫來避免複製資料：
 
 ```cpp
 template <class T>
@@ -395,9 +422,9 @@ swap(T& a, T& b) {
 
 如果 `T` 是一個資料結構，例如 `vector<int>` ，那裡面可能就包含大量資料，用第一版就會浪費大量的資源與時間。
 
-Default move constructor 基本上跟 copy constructor 差不多，只是他不會複製指標指向的資料，而是單純將指標複製一份。同時也會修改原本 class 的 member，把資料都留空。
+如同 copy constructor，預設 compiler 會幫每一個型別實作一個 move constructor，作法基本上跟 copy constructor 差不多。只差在他不會複製指標指向的資料，而是單純將指標複製一份（做 shallow copy 而非 deep copy）。同時也會修改原本 class 的 member，把所有變數都清空（避免跟 moved 後的物件使用到相同的記憶體空間）。
 
-## Containers
+## 新增的 Containers
 
 - `std::array`
     - 威力加強版的 array，提供了一些 container 的額外功能：
@@ -487,8 +514,10 @@ Default move constructor 基本上跟 copy constructor 差不多，只是他不�
 
 ## Smart Pointers
 
-- `std::shared_ptr` : 自動計數並銷毀的 pointer
-    
+Smart pointer 的加入大幅改進了 C++ 管理記憶體的彈性。以往 C++ 開發者如果沒有正確使用 pointer，則可能會造成該 pointer 指向非法空間 (segmentation fault) 或者 memory leak 等常見問題。如果 C++ 開發者使用 smart pointer，C++ 就能夠自動進行記憶體管理，並在適當的時機釋放該釋放的記憶體。
+
+- `std::shared_ptr` : 使用計數器管理記憶體的 pointer。
+  - 原理：每次複製 pointer 時都會造成內部的計數器加一，pointer 被銷毀時計數器減一，當計數器歸零時（即所有的 pointer 都被銷毀時），就會自動釋放背後物件的記憶體空間。
     ```cpp
     auto pointer = std::make_shared<int>(10);
     auto pointer2 = pointer; // reference count+1
@@ -508,7 +537,8 @@ Default move constructor 基本上跟 copy constructor 差不多，只是他不�
     std::cout << "pointer3.use_count() = " << pointer3.use_count() << std::endl; // 2
     ```
     
-- `std::unique_ptr` : 只允許一個變數的 pointer
+- `std::unique_ptr` : 不能被複製只能 move 的 pointer。
+  - 原理：當每次進行 pointer assignment 的行為時，被限定只能用 move 而不能複製的 pointer。舊的 pointer 在 move 完後會當即失效，無法繼續使用。而當這個唯一的 pointer 被銷毀時，背後物件的記憶體也會跟著被釋放。
     
     ```cpp
     #include <iostream> // std::cout
@@ -524,19 +554,15 @@ Default move constructor 基本上跟 copy constructor 差不多，只是他不�
     }
     ```
     
-- `std::weak_ptr` : 弱指針，不會引起 `shared_ptr` 計數增加
-    - 主要是用來避免下圖的 cycle share 問題：
+- `std::weak_ptr` : 弱指針，針對 `shared_ptr` 設計，建立時不會引起計數器加一。
+    - `shared_ptr` 有個常見的問題是，如果有兩個 `shared_ptr` 互相指向對方，那麼就會造成計數器永遠不會變成 0：
         
-        ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/90130fb6-82ad-49ff-9656-f23eef83d45d/bc344694-84cb-4491-96f3-8d1d26059d53/Untitled.png)
+        ![Cycle Share](weak-pointer.png)
         
+      - 因此這時通常會讓其中一個 pointer 改成用 `weak_ptr`，這樣就 `shared_ptr` 就可以正常歸零。
     - 用法：直接 assign `shared_ptr` 給 `weak_ptr` 即可
         
         ```cpp
         std::shared_ptr<int> a = std::make_shared<int>(42);
         std::weak_ptr<int> b = a;
         ```
-        
-
-## 沒搞懂的東西
-
-- `decltype(auto)`
