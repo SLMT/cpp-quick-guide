@@ -1,4 +1,4 @@
-# 小山的 C++ 快速上手筆記（校對中）
+# 小山的 C++ 快速上手筆記
 
 [![Deploy](https://github.com/SLMT/cpp-quick-guide/actions/workflows/deploy.yml/badge.svg)](https://github.com/SLMT/cpp-quick-guide/actions/workflows/deploy.yml)
 
